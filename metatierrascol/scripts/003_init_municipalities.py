@@ -10,6 +10,143 @@ from django.db import connection
 from pgOperations.pgOperations import PgConnection
 from pgOperations.pgOperations import PgConnection, PgOperations, FieldsAndValues
 
+ld=[
+['Casanare'],
+['Cundinamarca'],
+['Tolima'],
+['Meta'],
+['Antioquia'],
+['Boyacá'],
+['Vaupes'],
+['Santander'],
+['Córdoba'],
+['Guaviare'],
+['Choco'],
+['Archipiélago de San Andrés'],
+['Guainia'],
+['Sucre'],
+['Arauca'],
+['Nariño'],
+['Amazonas'],
+['Bogotá DC'],
+['Magdalena'],
+['Norte de Santander'],
+['Caqueta'],
+['Risaralda'],
+['Vichada'],
+['La Guajira'],
+['Cesar'],
+['Quindio'],
+['Cauca'],
+['Putumayo'],
+['Caldas'],
+['Valle del Cauca'],
+['Huila'],
+['Bolívar'],
+['Atlántico']
+]
+
+lp=[
+['Sugamuxi'],
+['García Rovira'],
+['Río Negro'],
+['Magdalena Medio Bilivariense'],
+['San Jorge'],
+['Gutiérrez'],
+['Noroccidental'],
+['Sumapaz'],
+['Vélez'],
+['Occidental'],
+['Magdalena Centro'],
+['Alto Magdalena'],
+['Almeidas'],
+['Mojana Volivariense'],
+['Morroso Uillo'],
+['Costa'],
+['Occidente'],
+['Dos – Vertiente Occidental'],
+['Sur'],
+['Medina'],
+['Guaviare'],
+['Guainia'],
+['Bajo Sinú'],
+['Uraba'],
+['Norte'],
+['Capital'],
+['Magdalen a medio'],
+['Soacha'],
+['Bogotá'],
+['Sabanas'],
+['Valderrama'],
+['Amazonas'],
+['Sábanas'],
+['Gualiva'],
+['Centro'],
+['Darien'],
+['Vichada'],
+['Ariari'],
+['San Juan'],
+['Nordeste'],
+['Comunera'],
+['Suroriente'],
+['Uno – Vertiente Oriental'],
+['Central'],
+['Montes de María'],
+['Guanenta'],
+['Márquez'],
+['Loba'],
+['Alto Occidente'],
+['Bajo Magdalena'],
+['Pacifico Norte'],
+['Sur Occidente'],
+['Oriental'],
+['Sur Oriente'],
+['Casanare'],
+['Pacífico Sur'],
+['Suroeste'],
+['Tundama'],
+['Mojana'],
+['Valle'],
+['Oriente'],
+['Río Meta'],
+['Ricaurte'],
+['Vaupes'],
+['Ubate'],
+['Tequendama'],
+['Depresión Momposina'],
+['Tres – Vertiente del Pacífico'],
+['Guavio'],
+['Soto'],
+['Sabana Centro'],
+['Alto Sinú'],
+['Mares'],
+['Acostanera'],
+['Santa Marta'],
+['Valle del Aburra'],
+['Archipiélago de San Andrés'],
+['Lengupa'],
+['Centro Oriente'],
+['Río'],
+['Sabana Occidente'],
+['Bajo Cauca'],
+['Bajo Occidente'],
+['Dique Bilivarense'],
+['Centro Occidente'],
+['Atrato'],
+['Arauca'],
+['Sinú Medio'],
+['Ibague'],
+['Alto Oriente'],
+['Nevados'],
+['Piedemonte'],
+['Caqueta'],
+['La Libertad'],
+['Cordilléranos'],
+['Neira'],
+['Putumayo'],
+['Fría']
+]
+
 lm=[
     ['Amazonas','Amazonas',91263,'El Encanto'],
     ['Amazonas','Amazonas',91405,'La Chorrera'],
@@ -1140,6 +1277,22 @@ po=PgOperations(pgConnection=oc, autoCommit=True, global_print_queries=False)
 #oc.commit()
 #print ('Tabla municipios creada')
 
+for v in ld:
+    d={}
+    d['departamento']=v[0]
+    fv=FieldsAndValues(d=d)
+    po.pgInsert(table_name='codelist.departamento', fieldsAndValues=fv, str_fields_returning=None, print_query=False) 
+
+print ('Departamentos insertados')
+
+for v in lp:
+    d={}
+    d['provincia']=v[0]
+    fv=FieldsAndValues(d=d)
+    po.pgInsert(table_name='codelist.provincia', fieldsAndValues=fv, str_fields_returning=None, print_query=False) 
+
+print ('Provincias insertadas')
+
 for v in lm:
     d={}
     d['departamento']=v[0]
@@ -1150,3 +1303,6 @@ for v in lm:
     po.pgInsert(table_name='codelist.municipio', fieldsAndValues=fv, str_fields_returning=None, print_query=False) 
 
 print ('Municipios insertados')
+
+
+

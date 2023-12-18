@@ -11,17 +11,4 @@ class AppSettings(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'settings'
-
-
-class Municipio(models.Model):
-    #departamento,provincia,codigo_municipio,nombre_municipio
-    gid = models.AutoField(primary_key=True)
-    departamento = models.CharField(unique=True, max_length=100)
-    provincia = models.CharField(unique=True, max_length=100)
-    codigo_municipio = models.IntegerField()
-    nombre_municipio = models.CharField(unique=True, max_length=100)
-
-    class Meta:
-        managed = False
-        db_table = 'municipio'
+        db_table = 'appsettings'
