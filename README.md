@@ -36,10 +36,22 @@ Arrancar los contenedores de nuevo:
 docker-compose up
 
 Para inicializar la base de datos hay que ejecutar un script localizado en un contenedor:
+**Nota: Puede que el nombre del volumen y del contenedor (metatierrascol-api_metatierrascol-data, metatierrascol-api_metatierrascol_1 sea diferente en su ordenador).**
 
 	docker exec -it metatierrascol-api_metatierrascol_1 sh -c "./initdb.sh"
 
 Esto solo hay que hacerlo la primera vez que se instalan los contenedores.
+
+4. Visite la página de administración
+
+	http://localhost:8000/admin
+
+Usuario: admin, contraseña admin
+
+Puede ver detalles de la api en:
+
+	http://localhost:8000/swagger/
+	http://localhost:8000/redoc/
 
 Para reiniciar la base de datos, hay que borrar el volumen:
 
@@ -48,4 +60,4 @@ Para reiniciar la base de datos, hay que borrar el volumen:
 
 y volver al primer paso de la instalación.
 
-**Nota: Puede que el nombre del volumen y del contenedor (metatierrascol-api_metatierrascol-data, metatierrascol-api_metatierrascol_1 sea diferente en su ordenador).**
+
