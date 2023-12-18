@@ -1,0 +1,12 @@
+* Migrar la base de datos
+
+docker exec -it e08cc8dda091 /bin/sh
+python manage.py migrate
+
+* Crear el esquema codelist
+python manage.py shell < scripts/001_create_schema_codelist.py
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py shell < scripts/002_create_codelist_snr_persona_titular_tipo.py 
+python manage.py shell < scripts/003_create_municipalities.py 
