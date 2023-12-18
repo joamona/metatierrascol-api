@@ -48,4 +48,4 @@ Para reiniciar la base de datos, hay que borrar el volumen:
 
 y volver al primer paso de la instalación.
 
-**Nota: Puede que el nombre del volumen y del contenedor (metatierrascol-api_metatierrascol-data, metatierrascol-api_metatierrascol_1 sea diferente en su ordenador).
+**Nota: Puede que el nombre del volumen y del contenedor (metatierrascol-api_metatierrascol-data, metatierrascol-api_metatierrascol_1 sea diferente en su ordenador).**
