@@ -1281,8 +1281,8 @@ for v in ld:
     d={}
     d['departamento']=v[0]
     fv=FieldsAndValues(d=d)
+    #print(fv.list_field_values)
     po.pgInsert(table_name='codelist.departamento', fieldsAndValues=fv, str_fields_returning=None, print_query=False) 
-
 print ('Departamentos insertados')
 
 for v in lp:

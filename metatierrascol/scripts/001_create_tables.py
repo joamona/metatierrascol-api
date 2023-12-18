@@ -15,7 +15,7 @@ print('create table appsettings')
 oc.cursor.execute('CREATE TABLE IF NOT EXISTS appsettings (gid serial primary key, parameter_name varchar unique, parameter_value varchar, help_en varchar, help_es varchar)')
 
 print('create table codelist.departamento')
-oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.departamento (gid serial primary key, departamento varchar, unique (departamento))')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.departamento (gid serial primary key, departamento varchar, unique(departamento))')
 
 print('create table codelist.provincia')
 oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.provincia (gid serial primary key, provincia varchar, unique(provincia))')
