@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from django_filters import rest_framework as filters
 
 #mis módulos
-from appcore import serializers, models
+from . import serializers, models
 
 def notLoggedIn(request: HttpRequest):
     return JsonResponse({"ok":False,"message": "You are not logged in", "data":[]})
@@ -29,25 +29,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class AppSettingsViewSet(viewsets.ModelViewSet):
     queryset = models.AppSettings.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = serializers.AppSettingsSerializer
-
-
-
-class AppSettingsFilter(filters.FilterSet):
-    class Meta:
-        model = models.AppSettings
-        fields = {
-            'gid': ['exact','lt', 'gt'],
-            'parameter_name': ['exact'],
-        }
-
 
 class AppSettingsList(viewsets.ModelViewSet):
     queryset = models.AppSettings.objects.all()#el queriset trabaja con todos los obj
 						#es una variable de clase
     serializer_class = serializers.AppSettingsSerializer #es una variable de clase
-    permission_classes = [permissions.AllowAny]#esto permite a todos los métodos ser usados, 
+    permission_classes = [permissions.IsAdminUser]#esto permite a todos los métodos ser usados, 
         #pero cada método puede tener unos permisos diferentes con el siguiente decorador:
         # @action(detail=True, methods=['post'], permission_classes=[IsAdminOrIsSelf])
         #       detail=True significa que trabaje con varios registros

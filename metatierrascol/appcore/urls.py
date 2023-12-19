@@ -4,8 +4,8 @@ from rest_framework import routers
 from appcore import views
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet, 'users')
-router.register(r'appsettings',views.AppSettingsViewSet, 'appsettings')
+router.register(r'core/users', views.UserViewSet, 'users')
+router.register(r'core/appsettings',views.AppSettingsViewSet, 'appsettings')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

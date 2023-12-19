@@ -1,7 +1,7 @@
-# Bien venido al proyecto Metatierras Colombia
+# Bienvenido al proyecto Metatierras Colombia
 
-Metatierras colombia es un proyecto financiado por la Universitat Politècnica de València, 
-y realizado en colaboración con la fundación Forjado Futuros.
+Metatierras colombia es un proyecto financiado por la <a href='https://www.upv.es/'>Universitat Politècnica de València</a>, 
+y realizado en colaboración con la <a href='https://www.forjandofuturos.org/'> Fundación Forjado Futuros</a>.
 
 El objetivo del proyecto es diseñar software libre para la agilización de la regularización 
 de tierras rústicas en Colombia.
@@ -10,21 +10,24 @@ Este repositorio contiene parte de la implementación del diseño. Contiene un p
 con la API REST, realizada con Django Rest Framework, que permite la interacción con la
 base de datos.
 
+Esta API recibe los datos de la aplicación móvil de toma de datos de campo, y permite luego la descarga a usuarios autorizados, mediante un geoportal. Tanto la app, como el geoportal están todavía en desarrollo. Estamos dando los primeros pasos.
+
 # Instalación
+
 1. Instalar Docker y Docker Compose
+
 2. Clonar el repositorio
 	
-	https://github.com/joamona/metatierrascol-api.git
+	git clone https://github.com/joamona/metatierrascol-api.git
 
-3. Ejecutar:
+3. Arrancar los contenedores:
+
+En la carpeta donde está el fichero .yml, ejecutar:
 
 	docker-compose up
 
-En la carpeta donde está el fichero .yml
-La primera vez al inicializar con docker-compose up, se crean las imágenes y los contenedores,
-pero servicio db tarda mucho porque debe crear el volumen de datos y no se inicia bien la API.
-
-Detener los contenedores:
+La primera vez que se crean los contenedores con docker-compose up, se crean las imágenes y los contenedores,
+pero servicio db tarda mucho porque debe crear el volumen de datos y no se inicia bien la API.Detener los contenedores:
 
 	control + c
 
@@ -33,31 +36,42 @@ o
 	doker-compose stop
 
 Arrancar los contenedores de nuevo:
-docker-compose up
 
-Para inicializar la base de datos hay que ejecutar un script localizado en un contenedor:
-**Nota: Puede que el nombre del volumen y del contenedor (metatierrascol-api_metatierrascol-data, metatierrascol-api_metatierrascol_1 sea diferente en su ordenador).**
+	docker-compose up
+
+4. Inicializar la base de datos
+
+Es necesario crear una base de datos con tablas y datos iniciales para que la API funcione. Para inicializar la base de datos hay que ejecutar un script localizado en un contenedor:
+
+**Nota: En lo siguiente aparecen nombres de contenedores. Puede que el nombre del volumen, y del contenedor, refererido (metatierrascol-api_metatierrascol-data, metatierrascol-api_metatierrascol_1) sea diferente en su ordenador. Puede ver los nombres asignados en su ordenador con los comandos docker ps y docker volume ls**
 
 	docker exec -it metatierrascol-api_metatierrascol_1 sh -c "./initdb.sh"
 
-Esto solo hay que hacerlo la primera vez que se instalan los contenedores.
+Solo es necesario inicializar la base de datos una vez. La primera vez que se instalan los contenedores.
 
-4. Visite la página de administración
-
-	http://localhost:8000/admin
+5. Visitar la página de administración
 
 Usuario: admin, contraseña admin
+
+	http://localhost:8000/admin
 
 Puede ver detalles de la api en:
 
 	http://localhost:8000/swagger/
 	http://localhost:8000/redoc/
 
-Para reiniciar la base de datos, hay que borrar el volumen:
+6. Reiniciar la base de datos
+
+Para el desarrollo, puede que necesite reiniciar la base de datos, para añadir nuevas tablas, o borrar datos de pruebas. Realice los siguientes pasos:
+
+- Detenga los servicios:
 
 	docker-compose down
+
+- Elimine el volumen que contiene los datos de la base de datos.
+
  	docker volume rm metatierrascol-api_metatierrascol-data
 
-y volver al primer paso de la instalación.
+- Vuelva al paso 3 de la instalación.
 
 

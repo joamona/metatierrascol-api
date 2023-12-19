@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from appcore import models
+from . import models
 from rest_framework import serializers
 
 # Serializers define the API representation.
