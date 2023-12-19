@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED 1
 # install psycopg2 dependencies
 #pango es una dependencia de weasyprint
 RUN apk update && apk add postgresql-dev gcc musl-dev libpq-dev wget pango  \
-     libffi-dev python3-dev build-essential libssl-dev  python-dev
+     libffi-dev python3-dev
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
      libc-dev linux-headers 
 
