@@ -9,7 +9,7 @@ from django.db import connection
 
 from pgOperations import pgOperations as pg
 
-from landsurveyapi import settings
+from metatierrascol import settings
 
 def getDjangoPg():
     pgc: pg.PgConnection = pg.PgConnection(connection)

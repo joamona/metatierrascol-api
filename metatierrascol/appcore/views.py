@@ -1,25 +1,51 @@
 # Create your views here.
 #Django imports
-from django.http import JsonResponse, HttpResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest
 from django.views import View
 from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
 from django.shortcuts import get_object_or_404
 
 #rest framework imports
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 from django_filters import rest_framework as filters
+from rest_framework.permissions import AllowAny
+from rest_framework import status
+#from rest_framework.authentication import BasicAuthentication
+
+from knox.auth import TokenAuthentication
+from knox.views import LoginView as KnoxLoginView
 
 #mis módulos
 from . import serializers, models
+from .commonlibs import managePermissions
 
 def notLoggedIn(request: HttpRequest):
     return JsonResponse({"ok":False,"message": "You are not logged in", "data":[]})
 
-class Index(View):
+class HelloWorld(View):
     def get(self, request):
         return JsonResponse({"ok":True,"message": "Hello world", "data":[]})
 
+class LoginViewWithKnox(KnoxLoginView):
+    permission_classes = (AllowAny, )
+    serializer_class = serializers.LoginViewWithKnoxSerializer
+
+    def post(self, request, format=None):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.validated_data['user']
+            login(request, user)
+            response = super().post(request, format=None)
+        else:
+            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        print('Validated data')
+        print(serializer.validated_data)
+        v=response.data #the response with the authentication token
+        groups = managePermissions.getUserGroups_fromUsername(request.data['username'])
+        v['groups'] = groups #la lista de grupos a los que pertenece el usuario
+        return Response(v, status=status.HTTP_200_OK)
 
 # ViewSets define the view behavior.
 class UserViewSet(viewsets.ModelViewSet):
@@ -28,6 +54,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class AppSettingsViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication,)
     queryset = models.AppSettings.objects.all()
     permission_classes = [permissions.IsAdminUser]
     serializer_class = serializers.AppSettingsSerializer

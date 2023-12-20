@@ -10,7 +10,7 @@ import json
 
 from django.contrib.auth.models import User, Group, Permission
 from django.http import JsonResponse
-from landsurveyapi import settings
+from metatierrascol import settings
 from django.db import models
 
 """
