@@ -64,7 +64,7 @@ Puede ver detalles de la api en:
 
 Para el desarrollo, puede que necesite reiniciar la base de datos, para añadir nuevas tablas, o borrar datos de pruebas. Realice los siguientes pasos:
 
-- Detenga los servicios:
+- Detenga y borre los contenedores:
 
 	docker-compose down
 
