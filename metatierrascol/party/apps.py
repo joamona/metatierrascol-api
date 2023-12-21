@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AppcodelistConfig(AppConfig):
+class ApppartyConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'appcodelist'
+    name = 'party'

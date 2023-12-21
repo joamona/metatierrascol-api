@@ -1,5 +1,5 @@
 from django.contrib import admin
-from appcore import models
+from . import models
 
 class AppSettingsAdmin(admin.ModelAdmin):
     list_display = ('gid', 'parameter_name', 'parameter_value','help_es','help_en')

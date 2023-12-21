@@ -12,10 +12,12 @@ from rest_framework.response import Response
 from django_filters import rest_framework as filters
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-#from rest_framework.authentication import BasicAuthentication
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.views import APIView
 
 from knox.auth import TokenAuthentication
 from knox.views import LoginView as KnoxLoginView
+
 
 #mis módulos
 from . import serializers, models
@@ -24,9 +26,10 @@ from .commonlibs import managePermissions
 def notLoggedIn(request: HttpRequest):
     return JsonResponse({"ok":False,"message": "You are not logged in", "data":[]})
 
-class HelloWorld(View):
-    def get(self, request):
-        return JsonResponse({"ok":True,"message": "Hello world", "data":[]})
+@api_view(http_method_names=['GET'])
+@permission_classes((permissions.AllowAny,))
+def helloWorld(request):
+    return Response({"ok":True,"message": "Hello world", "data":[]})
 
 class LoginViewWithKnox(KnoxLoginView):
     permission_classes = (AllowAny, )
@@ -46,12 +49,6 @@ class LoginViewWithKnox(KnoxLoginView):
         groups = managePermissions.getUserGroups_fromUsername(request.data['username'])
         v['groups'] = groups #la lista de grupos a los que pertenece el usuario
         return Response(v, status=status.HTTP_200_OK)
-
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
-
 
 class AppSettingsViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
@@ -75,3 +72,14 @@ class AppSettingsList(viewsets.ModelViewSet):
 			#many significa que puede trabajar
 			#con varios registros, no solo uno
         return Response(s.data)
+    
+
+class AppSettingsListQuery(generics.ListAPIView):
+    """
+    Esta vista se puede consultar con: 
+        http://localhost:8000/core/appsettings_list_query/?help_es=a&help_es=b
+    """
+    queryset = models.AppSettings.objects.all()
+    serializer_class = serializers.AppSettingsSerializer #
+    permission_classes = [permissions.IsAdminUser]
+    filterset_fields = ['help_es', 'help_en']

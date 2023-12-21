@@ -43,11 +43,11 @@ INSTALLED_APPS = [
     'knox',
     'django_filters',
     'corsheaders',
-    'appcore',
-    'appcodelist',
-    'appparty',
-    'apprrr',
-    'appspatialunits'
+    'core',
+    'codelist',
+    'party',
+    'rrr',
+    'spatialunits'
 ]
 
 MIDDLEWARE = [
