@@ -38,3 +38,13 @@ class Municipio(models.Model):
     class Meta:
         managed = False
         db_table = 'codelist"."municipio'
+
+
+class Sector(models.Model):
+    #departamento,provincia,codigo_municipio,nombre_municipio
+    gid = models.AutoField(primary_key=True, editable=False)
+    sector = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'codelist"."sector'
