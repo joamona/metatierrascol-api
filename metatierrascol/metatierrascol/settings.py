@@ -43,11 +43,13 @@ INSTALLED_APPS = [
     'knox',
     'django_filters',
     'corsheaders',
-    'core',
-    'codelist',
-    'party',
-    'rrr',
-    'spatialunits'
+    'core',#configuraciones, autenticación, utilidades generales
+    'codelist',#listas codificadas
+    'party',#usuarios
+    'rrr',#derechos
+    'baunit',#unidades basicas (predios)
+    'spatialunit',#unidades espaciales, un predio puede tener varias versiones de unidad espacial
+    'source'#manejo de documentos
 ]
 
 MIDDLEWARE = [

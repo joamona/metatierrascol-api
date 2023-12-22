@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class SnrPersonaTitularTipo(models.Model):
-    gid = models.AutoField(primary_key=True)
+    gid = models.AutoField(primary_key=True, editable=False)
     snr_persona_titular_tipo = models.CharField(max_length=20, unique=True)
     class Meta:
         managed = False
@@ -11,7 +11,7 @@ class SnrPersonaTitularTipo(models.Model):
 
 class Departamento(models.Model):
     #departamento,provincia,codigo_municipio,nombre_municipio
-    gid = models.AutoField(primary_key=True)
+    gid = models.AutoField(primary_key=True, editable=False)
     departamento = models.CharField(unique=True, max_length=100)
 
     class Meta:
@@ -20,7 +20,7 @@ class Departamento(models.Model):
 
 class Provincia(models.Model):
     #departamento,provincia,codigo_municipio,nombre_municipio
-    gid = models.AutoField(primary_key=True)
+    gid = models.AutoField(primary_key=True, editable=False)
     provincia = models.CharField(unique=True, max_length=100)
 
     class Meta:
@@ -29,7 +29,7 @@ class Provincia(models.Model):
 
 class Municipio(models.Model):
     #departamento,provincia,codigo_municipio,nombre_municipio
-    gid = models.AutoField(primary_key=True)
+    gid = models.AutoField(primary_key=True, editable=False)
     departamento = models.CharField(max_length=100)
     provincia = models.CharField(max_length=100)
     codigo_municipio = models.IntegerField(unique=True,)
