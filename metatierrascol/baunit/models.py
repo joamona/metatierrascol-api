@@ -11,6 +11,10 @@ class Baunit(models.Model):
     sector_predio = models.ForeignKey(codelist_models.Sector,on_delete=models.CASCADE, null=False)
     municipio = models.ForeignKey(codelist_models.Municipio,on_delete=models.CASCADE, null=False)
     numero_predial = models.TextField(max_length=50)
+    tipo = models.ForeignKey(codelist_models.Lc_prediotipo, on_delete=models.CASCADE, null=False)
+    complemento = models.TextField(max_length=200)
     
-
+    class Meta:
+        managed = True
+        db_table = 'baunit'
 

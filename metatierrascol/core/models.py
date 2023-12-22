@@ -10,5 +10,5 @@ class AppSettings(models.Model):
     help_es = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'appsettings'

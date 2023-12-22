@@ -6,7 +6,7 @@ class SnrPersonaTitularTipo(models.Model):
     gid = models.AutoField(primary_key=True, editable=False)
     snr_persona_titular_tipo = models.CharField(max_length=20, unique=True)
     class Meta:
-        managed = False
+        managed = True
         db_table = 'codelist"."snr_persona_titular_tipo'
 
 class Departamento(models.Model):
@@ -15,7 +15,7 @@ class Departamento(models.Model):
     departamento = models.CharField(unique=True, max_length=100)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'codelist"."departamento'
 
 class Provincia(models.Model):
@@ -24,7 +24,7 @@ class Provincia(models.Model):
     provincia = models.CharField(unique=True, max_length=100)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'codelist"."provincia'
 
 class Municipio(models.Model):
@@ -33,18 +33,28 @@ class Municipio(models.Model):
     departamento = models.CharField(max_length=100)
     provincia = models.CharField(max_length=100)
     codigo_municipio = models.IntegerField(unique=True,)
-    nombre_municipio = models.CharField(unique=True, max_length=100)
+    nombre_municipio = models.CharField(max_length=100)
 
     class Meta:
-        managed = False
+        managed = True
+        unique_together = ('codigo_municipio', 'nombre_municipio',)
         db_table = 'codelist"."municipio'
 
 
 class Sector(models.Model):
     #departamento,provincia,codigo_municipio,nombre_municipio
     gid = models.AutoField(primary_key=True, editable=False)
-    sector = models.CharField(max_length=100)
+    sector = models.CharField(max_length=20)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'codelist"."sector'
+
+class Lc_prediotipo(models.Model):
+    #departamento,provincia,codigo_municipio,nombre_municipio
+    gid = models.AutoField(primary_key=True, editable=False)
+    lc_prediotipo = models.CharField(max_length=50)
+
+    class Meta:
+        managed = True
+        db_table = 'codelist"."lc_prediotipo'

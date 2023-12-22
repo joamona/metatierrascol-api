@@ -12,10 +12,10 @@ po=PgOperations(pgConnection=oc, autoCommit=True, global_print_queries=True)
 #snr_persona_titular_tipo
 
 def addCodeList(tableName, valuesList):
-    cons='create table codelist.{tableName} (gid serial primary key, {tableName} varchar unique)'.format(tableName=tableName)
-    print(cons)
-    oc.cursor.execute(cons)
-    oc.commit()
+#    cons='create table codelist.{tableName} (gid serial primary key, {tableName} varchar unique)'.format(tableName=tableName)
+#    print(cons)
+#    oc.cursor.execute(cons)
+#    oc.commit()
     
     t='codelist.' + tableName
     for v in valuesList:

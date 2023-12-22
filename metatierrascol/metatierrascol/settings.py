@@ -43,8 +43,8 @@ INSTALLED_APPS = [
     'knox',
     'django_filters',
     'corsheaders',
-    'core',#configuraciones, autenticación, utilidades generales
     'codelist',#listas codificadas
+    'core',#configuraciones, autenticación, utilidades generales
     'party',#usuarios
     'rrr',#derechos
     'baunit',#unidades basicas (predios)
