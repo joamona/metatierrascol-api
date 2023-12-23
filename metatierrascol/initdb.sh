@@ -11,6 +11,7 @@ python manage.py shell < script/005_init_lc_prediotipo.py
 python manage.py shell < script/006_init_municipalities.py
 python manage.py shell < script/007_init_snr_persona_titular_tipo.py
 python manage.py shell < script/008_init_sector.py
+python manage.py shell < script/009_init_estado_expediente_predio.py
 
 
 

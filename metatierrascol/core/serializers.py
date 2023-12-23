@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from . import models
 from rest_framework import serializers

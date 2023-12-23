@@ -1,35 +1,39 @@
-from django.utils.timezone import datetime
-
-from django.contrib.auth import authenticate
+import datetime
+from django.contrib.auth.models import User
 
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
-from . import models
-from codelist.models import Municipio
+from .models import Baunit
+from codelist.models import Departamento, Provincia, Municipio, Lc_prediotipo, EstadoExpediente, Sector
 
 class BaunitSerializer(serializers.ModelSerializer):
-    #read_only_fields = ['creado_por', 'modificado_por', 'fecha_creacion','fecha_modificacion', 'gid', 'uuid']
-    municipio=serializers.SlugRelatedField(queryset=Municipio.objects.all(),slug_field='nombre_municipio',read_only=False, many=False,allow_null=False)
-    
+    creado_por=serializers.SlugRelatedField(queryset=User.objects.all(),slug_field='username',read_only=False, many=False,required=False)
+    provincia=serializers.SlugRelatedField(queryset=Provincia.objects.all(),slug_field='provincia',read_only=False, many=False,required=True)
+    departamento=serializers.SlugRelatedField(queryset=Departamento.objects.all(),slug_field='departamento',read_only=False, many=False,required=True)
+    sector_predio=serializers.SlugRelatedField(queryset=Sector.objects.all(),slug_field='sector',read_only=False, many=False,required=True)
+    municipio=serializers.SlugRelatedField(queryset=Municipio.objects.all(),slug_field='nombre_municipio',read_only=False, many=False,required=True)
+    tipo=serializers.SlugRelatedField(queryset=Lc_prediotipo.objects.all(),slug_field='lc_prediotipo',read_only=False, many=False,required=True)
+    estado_expediente=serializers.SlugRelatedField(queryset=EstadoExpediente.objects.all(),slug_field='estado_expediente',read_only=False, many=False,required=False)
+
     class Meta:
-        model = models.Baunit
+        model=Baunit
         fields = ['id','creado_por', 'fecha_creacion',
-                  'uuid','nombre',
-                  'departamento','sector_predio','municipio','numero_predial',
-                  'tipo','complemento', 'estado_expediente']
+                   'codigo_acceso','nombre','provincia',
+                   'departamento','sector_predio','municipio','numero_predial',
+                   'tipo','complemento', 'estado_expediente']
 
     def create(self, validated_data):
-        validated_data['fecha_modificacion']=None
-        print("Validated_data")
-        print(validated_data)
-        ba=models.Baunit(**validated_data,creado_por=self.context['request'].user)
+        # print('validated_data')
+        # print(validated_data)
+        es=list(EstadoExpediente.objects.filter(estado_expediente='Recibido'))[0]
+        ba=Baunit(**validated_data,creado_por=self.context['request'].user, estado_expediente=es)
         ba.save()
         return ba
 
-    # def update(self, instance, validated_data):
-    #     print('Updating')
-    #     instance.modificado_por = self.context['request'].user
-    #     instance.fecha_modificacion = datetime.now()
-    #     instance.save()
-    #     return instance
+    def update(self, instance, validated_data):
+        # print('Updating')
+        # instance.modificado_por = self.context['request'].user
+        # instance.fecha_modificacion = datetime.now()
+        instance.save()
+        return instance
+    

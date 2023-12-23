@@ -69,23 +69,25 @@ oc.cursor.execute("""CREATE TABLE IF NOT EXISTS baunit.baunit
                     id serial primary key,
                     numero_predial varchar,
                     nombre varchar,
-                    tipo integer not null,
+                    tipo_id integer not null,
                     complemento varchar,
-                    departamento integer not null,
-                    sector_predio integer not null,
-                    municipio integer not null,
-                    creado_por integer not null,
+                    departamento_id integer not null,
+                    provincia_id integer not null,
+                    sector_predio_id integer not null,
+                    municipio_id integer not null,
+                    creado_por_id integer not null,
                     fecha_creacion timestamp not null,
                     codigo_acceso varchar not null,
-                    estado_expediente integer not null
+                    estado_expediente_id integer not null
                   )"""
 )
-oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_departamento FOREIGN KEY (departamento) REFERENCES codelist.departamento(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_sector_predio FOREIGN KEY (sector_predio) REFERENCES codelist.sector(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_municipio FOREIGN KEY (municipio) REFERENCES codelist.municipio(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_tipo FOREIGN KEY (tipo) REFERENCES codelist.Lc_prediotipo(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_creado_por FOREIGN KEY (creado_por) REFERENCES auth_user(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_estado_expediente FOREIGN KEY (estado_expediente) REFERENCES codelist.estado_expediente(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_departamento FOREIGN KEY (departamento_id) REFERENCES codelist.departamento(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_proincia FOREIGN KEY (provincia_id) REFERENCES codelist.provincia(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_sector_predio FOREIGN KEY (sector_predio_id) REFERENCES codelist.sector(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_municipio FOREIGN KEY (municipio_id) REFERENCES codelist.municipio(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_tipo FOREIGN KEY (tipo_id) REFERENCES codelist.Lc_prediotipo(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_creado_por FOREIGN KEY (creado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_estado_expediente FOREIGN KEY (estado_expediente_id) REFERENCES codelist.estado_expediente(id) on delete no action on update cascade')
 
 
 

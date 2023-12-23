@@ -26,6 +26,18 @@ En la carpeta donde está el fichero .yml, ejecutar:
 
 	docker-compose up
 
+Detener los servicios
+
+	control + c
+
+o
+
+	docker-compose stop
+
+Arrancar de nuevo los servicios
+
+	docker-compose up
+
 4. Inicializar la base de datos
 
 Es necesario crear una base de datos con tablas y datos iniciales para que la API funcione. Para inicializar la base de datos hay que ejecutar un script localizado en un contenedor:
