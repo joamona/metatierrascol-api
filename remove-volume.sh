@@ -1,3 +1,4 @@
 #/bin/bash
+docker-compose down
 docker volume rm metatierrascol-api_metatierrascol-data
-python3 metatierrascol/remove_migration_files.py
+

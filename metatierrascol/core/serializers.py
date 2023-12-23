@@ -3,25 +3,6 @@ from django.contrib.auth import authenticate
 from . import models
 from rest_framework import serializers
 
-# Serializers define the API representation.
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['email', 'password', 'is_active']
-
-    def create(self, validated_data):
-        """
-        El campo username se rellena con el email
-        """
-        return User(**validated_data,username=validated_data['email'])
-
-    def update(self, instance, validated_data):
-        instance.email = validated_data.get('email', instance.email)
-        instance.content = validated_data.get('password', instance.password)
-        instance.created = validated_data.get('is_active', instance.is_active)
-        return instance   
-    
-
 class AppSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AppSettings
@@ -36,6 +17,7 @@ class AppSettingsSerializer(serializers.ModelSerializer):
         #attrs.get('atributo')
         #si los valores son correctos, devuelve return attrs
         #si hay error return serializers.ValidationError('El mensaje')
+        return validated
 
 
 class LoginViewWithKnoxSerializer(serializers.Serializer):

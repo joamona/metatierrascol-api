@@ -44,7 +44,7 @@ class Municipio(models.Model):
 class Sector(models.Model):
     #departamento,provincia,codigo_municipio,nombre_municipio
     gid = models.AutoField(primary_key=True, editable=False)
-    sector = models.CharField(max_length=20)
+    sector = models.CharField(max_length=20, unique=True)
 
     class Meta:
         managed = True
@@ -53,8 +53,9 @@ class Sector(models.Model):
 class Lc_prediotipo(models.Model):
     #departamento,provincia,codigo_municipio,nombre_municipio
     gid = models.AutoField(primary_key=True, editable=False)
-    lc_prediotipo = models.CharField(max_length=50)
+    lc_prediotipo = models.CharField(max_length=50, unique=True)
 
     class Meta:
         managed = True
         db_table = 'codelist"."lc_prediotipo'
+        

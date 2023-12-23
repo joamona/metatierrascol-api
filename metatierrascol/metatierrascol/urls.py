@@ -42,7 +42,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('', include('codelist.urls')),
     path('', include('party.urls')),
-    
+    path('', include('baunit.urls')),    
 ]
 
 #A JSON view of your API specification at /swagger.json

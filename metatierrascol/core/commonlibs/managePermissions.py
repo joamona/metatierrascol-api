@@ -249,4 +249,7 @@ class CheckAccessToUrl():
                                                                   }]
                                                            })
                 
-         
+def addUserToGroup(username, groupname):
+    g = Group.objects.get(name=groupname) 
+    u = User.objects.get(username=username)
+    g.user_set.add(u)

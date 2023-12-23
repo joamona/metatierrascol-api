@@ -41,10 +41,11 @@ Arrancar los contenedores de nuevo:
 
 4. Inicializar la base de datos
 
-Es necesario crear una base de datos con tablas y datos iniciales para que la API funcione. Para inicializar la base de datos hay que ejecutar un script localizado en un contenedor:
+Es necesario crear una base de datos con tablas y datos iniciales para que la API funcione. Para inicializar la base de datos hay que ejecutar dos scripts script localizados en un contenedor:
 
 **Nota: En lo siguiente aparecen nombres de contenedores. Puede que el nombre del volumen, y del contenedor, refererido (metatierrascol-api_metatierrascol-data, metatierrascol-api_metatierrascol_1) sea diferente en su ordenador. Puede ver los nombres asignados en su ordenador con los comandos docker ps y docker volume ls**
 
+	docker exec -it metatierrascol-api_metatierrascol_1 sh -c "./migrate.sh"
 	docker exec -it metatierrascol-api_metatierrascol_1 sh -c "./initdb.sh"
 
 Solo es necesario inicializar la base de datos una vez. La primera vez que se instalan los contenedores.
