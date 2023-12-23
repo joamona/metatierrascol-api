@@ -27,7 +27,7 @@ RUN pip3 install -r requirements.txt
 
 # copy project
 COPY . .
-RUN chmod +x migrate.sh
+#RUN chmod +x migrate.sh
 RUN chmod +x initdb.sh
 
 #RUN echo "Collect static files"

@@ -1,0 +1,93 @@
+'''
+Created on Dec 6, 2023
+
+@author: joamona
+
+Creo las tablas manualmente porque Django, cuando las crea al hacer las migraciones,
+no establece qué hacer ON UPDATE, en los campos de clave foránea.
+
+Se establece ON DELETE NO ACTION. Esto evita que se puedan borrar filas de otras tablas,
+si hay alguna referencia a la clave que se intenta borrar.
+'''
+
+from django.db import connection
+from pgOperations.pgOperations import PgConnection
+oc=PgConnection(connection)
+
+print('CREATE SCHEMA IF NOT EXISTS baunit')
+oc.cursor.execute('create schema baunit')
+
+print('CREATE SCHEMA IF NOT EXISTS codelist')
+oc.cursor.execute('create schema codelist')
+
+print('CREATE SCHEMA IF NOT EXISTS core')
+oc.cursor.execute('create schema core')
+
+print('CREATE SCHEMA IF NOT EXISTS party')
+oc.cursor.execute('create schema party')
+
+print('CREATE SCHEMA IF NOT EXISTS rrr')
+oc.cursor.execute('create schema rrr')
+
+print('CREATE SCHEMA IF NOT EXISTS source')
+oc.cursor.execute('create schema source')
+
+print('CREATE SCHEMA IF NOT EXISTS spatialunit')
+oc.cursor.execute('create schema spatialunit')
+
+
+#APP CODELIST
+print('create table codelist.departamento')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.departamento (id serial primary key, departamento varchar, unique(departamento))')
+
+print('create table codelist.provincia')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.provincia (id serial primary key, provincia varchar, unique(provincia))')
+
+print('create table codelist.municipio ')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.municipio (id serial primary key, departamento varchar, provincia varchar, codigo_municipio integer unique, nombre_municipio varchar, unique (codigo_municipio, nombre_municipio))')
+
+print('create table codelist.snr_persona_titular_tipo')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.snr_persona_titular_tipo (id serial primary key, snr_persona_titular_tipo varchar, unique (snr_persona_titular_tipo))')
+
+print('create table codelist.sector')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.sector (id serial primary key, sector varchar, unique (sector))')
+
+print('create table codelist.lc_prediotipo')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.lc_prediotipo (id serial primary key, lc_prediotipo varchar, unique (lc_prediotipo))')
+
+print('create table codelist.estado_expediente')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.estado_expediente (id serial primary key, estado_expediente varchar, unique (estado_expediente))')
+
+#APP CORE
+print('create table core.appsettings')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.appsettings (id serial primary key, parameter_name varchar unique, parameter_value varchar, help_en varchar, help_es varchar)')
+
+#APP BAUNIT
+print('create table baunit.baunit')
+oc.cursor.execute("""CREATE TABLE IF NOT EXISTS baunit.baunit
+                  (
+                    id serial primary key,
+                    numero_predial varchar,
+                    nombre varchar,
+                    tipo integer not null,
+                    complemento varchar,
+                    departamento integer not null,
+                    sector_predio integer not null,
+                    municipio integer not null,
+                    creado_por integer not null,
+                    fecha_creacion timestamp not null,
+                    codigo_acceso varchar not null,
+                    estado_expediente integer not null
+                  )"""
+)
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_departamento FOREIGN KEY (departamento) REFERENCES codelist.departamento(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_sector_predio FOREIGN KEY (sector_predio) REFERENCES codelist.sector(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_municipio FOREIGN KEY (municipio) REFERENCES codelist.municipio(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_tipo FOREIGN KEY (tipo) REFERENCES codelist.Lc_prediotipo(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_creado_por FOREIGN KEY (creado_por) REFERENCES auth_user(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_estado_expediente FOREIGN KEY (estado_expediente) REFERENCES codelist.estado_expediente(id) on delete no action on update cascade')
+
+
+
+oc.commit()
+
