@@ -22,6 +22,7 @@ from knox.views import LoginView as KnoxLoginView
 #mis módulos
 from . import serializers, models
 from .commonlibs import managePermissions
+from .accesspolicy import generalAccessPolicy
 
 def notLoggedIn(request: HttpRequest):
     return JsonResponse({"ok":False,"message": "You are not logged in", "data":[]})
@@ -51,9 +52,9 @@ class LoginViewWithKnox(KnoxLoginView):
         return Response(v, status=status.HTTP_200_OK)
 
 class AppSettingsViewSet(viewsets.ModelViewSet):
-    authentication_classes = (TokenAuthentication,)
     queryset = models.AppSettings.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = (generalAccessPolicy.AllowAdminPostMethods, 
+                          generalAccessPolicy.AllowAuthenticatedSafeMethods)
     serializer_class = serializers.AppSettingsSerializer
 
 class AppSettingsList(viewsets.ModelViewSet):
