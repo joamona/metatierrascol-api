@@ -22,18 +22,12 @@ class BaunitSerializer(serializers.ModelSerializer):
                    'departamento','sector_predio','municipio','numero_predial',
                    'tipo','complemento', 'estado_expediente']
 
-    def create(self, validated_data):
-        # print('validated_data')
-        # print(validated_data)
-        es=list(EstadoExpediente.objects.filter(estado_expediente='Recibido'))[0]
-        ba=Baunit(**validated_data,creado_por=self.context['request'].user, estado_expediente=es)
-        ba.save()
-        return ba
+    # def create(self, validated_data):
+    #     # print('validated_data')
+    #     # print(validated_data)
+    #     es=list(EstadoExpediente.objects.filter(estado_expediente='Recibido'))[0]
+    #     ba=Baunit(**validated_data,creado_por=self.context['request'].user, estado_expediente=es)
+    #     ba.save()
+    #     return ba
 
-    def update(self, instance, validated_data):
-        # print('Updating')
-        # instance.modificado_por = self.context['request'].user
-        # instance.fecha_modificacion = datetime.now()
-        instance.save()
-        return instance
     
