@@ -53,21 +53,20 @@ class LoginViewWithKnox(KnoxLoginView):
 
 class AppSettingsViewSet(viewsets.ModelViewSet):
     queryset = models.AppSettings.objects.all()
-    permission_classes = (generalAccessPolicy.AllowAdminPostMethods, 
-                          generalAccessPolicy.AllowAuthenticatedSafeMethods)
+    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethodsAdminPostMethods,)
     serializer_class = serializers.AppSettingsSerializer
 
 class AppSettingsList(viewsets.ModelViewSet):
     queryset = models.AppSettings.objects.all()#el queriset trabaja con todos los obj
 						#es una variable de clase
     serializer_class = serializers.AppSettingsSerializer #es una variable de clase
-    permission_classes = [permissions.IsAdminUser]#esto permite a todos los métodos ser usados, 
+    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethods,)#esto permite a todos los métodos ser usados, 
         #pero cada método puede tener unos permisos diferentes con el siguiente decorador:
         # @action(detail=True, methods=['post'], permission_classes=[IsAdminOrIsSelf])
         #       detail=True significa que trabaje con varios registros
-    def retrieve(self, request, gid=None):#fíjate que recibe request y un paraámertro de la url
+    def retrieve(self, request, id=None):#fíjate que recibe request y un paraámertro de la url
         #print(self.basename, self.action, self.detail, self.suffix, self.name, self.description)
-        qs2=self.queryset.filter(gid__lt=gid)#cojo el queryset de la variable de clase y le aplico
+        qs2=self.queryset.filter(id__lt=gid)#cojo el queryset de la variable de clase y le aplico
 			#el filtro gid < the_gid. → lt significa less than
         s = self.get_serializer(qs2, many=True)#obtiene el serializer de la clase
 			#many significa que puede trabajar
@@ -82,5 +81,5 @@ class AppSettingsListQuery(generics.ListAPIView):
     """
     queryset = models.AppSettings.objects.all()
     serializer_class = serializers.AppSettingsSerializer #
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
     filterset_fields = ['help_es', 'help_en']

@@ -1,27 +1,27 @@
 from django.contrib.auth.models import User
 from core.commonlibs import managePermissions
 
-propietario=User(username='propietario@gmail.com', password='zzzxxxccc')
+propietario=User.objects.create_user(username='propietario@gmail.com', password='zzzxxxccc')
 propietario.is_active=True
 propietario.email=propietario.username
 propietario.save()
 
-agrimensor=User(username='agrimensor@gmail.com', password='zzzxxxccc')
+agrimensor=User.objects.create_user(username='agrimensor@gmail.com', password='zzzxxxccc')
 agrimensor.is_active=True
 agrimensor.email=agrimensor.username
 agrimensor.save()
 
-ant=User(username='ant@gmail.com', password='zzzxxxccc')
+ant=User.objects.create_user(username='ant@gmail.com', password='zzzxxxccc')
 ant.is_active=True
 ant.email=ant.username
 ant.save()
 
-gestor_catastral=User(username='gestor_catastral@gmail.com', password='zzzxxxccc')
+gestor_catastral=User.objects.create_user(username='gestor_catastral@gmail.com', password='zzzxxxccc')
 gestor_catastral.is_active=True
 gestor_catastral.email=gestor_catastral.username
 gestor_catastral.save()
 
-snr=User(username='snr@gmail.com', password='zzzxxxccc')
+snr=User.objects.create_user(username='snr@gmail.com', password='zzzxxxccc')
 snr.is_active=True
 snr.email=snr.username
 snr.save()

@@ -33,5 +33,3 @@ class BaunitViewSet(viewsets.ModelViewSet):
         request.data['creado_por']=request.user
         r=super().update(request, *args, **kwargs)
         return r
-
-

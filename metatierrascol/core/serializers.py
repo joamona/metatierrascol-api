@@ -25,16 +25,17 @@ class LoginViewWithKnoxSerializer(serializers.Serializer):
 
     def validate_username(self,value):
         #validate_propiedad permite hacer validaciones adicionales sobre los campos
-        if len(value) > 10:
-            raise serializers.ValidationError('Username mayor que 10')
+        #if len(value) > 10:
+        #    raise serializers.ValidationError('Username mayor que 10')
         return value#hay que devolver un valor
     
     def validate(self, attrs): #se ejecuta con serializer.is_valid(raise_exception=True)
                     #e inicializa validated_data, con los datos validados, que es un dict
-        username = attrs.get('username').lower()
+        username = attrs.get('username')
         password = attrs.get('password')
         user = authenticate(request=self.context.get('request'), username=username,
                             password=password)
+        print(user)
         if not user:
             raise serializers.ValidationError("Usuario o contraseña erróneos.")
 

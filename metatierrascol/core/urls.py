@@ -16,6 +16,6 @@ urlpatterns = [
     path(r'core/knox/logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     path(r'core/knox/logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),    
     path('', include(router.urls)),
-    path('core/appsettings_list/<gid>/',views.AppSettingsList.as_view({'get': 'retrieve'}), name='appsetings_list'),
+    path('core/appsettings_list/<id>/',views.AppSettingsList.as_view({'get': 'retrieve'}), name='appsetings_list'),
     path('core/appsettings_list_query/',views.AppSettingsListQuery.as_view(), name='appsetings_list_query'),    
 ]
