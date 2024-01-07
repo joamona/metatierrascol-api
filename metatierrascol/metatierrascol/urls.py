@@ -39,10 +39,11 @@ urlpatterns = [
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'), 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('', include('core.urls')),
-    path('', include('codelist.urls')),
-    path('', include('party.urls')),
-    path('', include('baunit.urls')),    
+    path('core/', include('core.urls')),
+    path('codelist/', include('codelist.urls')),
+    path('party/', include('party.urls')),
+    path('baunit/', include('baunit.urls')),    
+    path('source/', include('source.urls')),    
 ]
 
 #A JSON view of your API specification at /swagger.json

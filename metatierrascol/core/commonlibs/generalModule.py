@@ -3,7 +3,7 @@ import json
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.http.request import HttpRequest
-
+from django.utils import timezone
 from django.core.mail import send_mail
 from django.db import connection
 
@@ -11,7 +11,8 @@ from pgOperations import pgOperations as pg
 
 from metatierrascol import settings
 
-def getDjangoPg():
+
+def getDjangoPg()->pg.PgOperations:
     pgc: pg.PgConnection = pg.PgConnection(connection)
     pgo: pg.PgOperations = pg.PgOperations(pgc, autoCommit=True,global_print_queries=settings.DEBUG)
     return pgo
@@ -19,12 +20,15 @@ def getDjangoPg():
 def getDjangoCursor():
     return connection.cursor()
 
-def getSettingsFunction(request,pg):
-    r=pg.pgOper.pgSelect(table_name="public.settings", string_fields_to_select="parameter_name,parameter_value")
+def getSettingsFunction(request):
+    pgo=getDjangoPg()
+    r=pgo.pgSelect(table_name="core.appsettings", string_fields_to_select="parameter_name,parameter_value")
     return {"ok":"true","message": "Settings successfully retrieved", "data":r}
 
-def getSetting(parameterName, pg):
-    r=pg.pgOper.pgSelect(table_name="public.settings", string_fields_to_select="parameter_value", cond_where="parameter_name=%s",list_val_cond_where=[parameterName])
+def getSetting(parameterName):
+    pgo=getDjangoPg()
+    cond_where =pg.WhereClause(where_clause="parameter_name=%s",where_values_list=[parameterName])
+    r=pgo.pgSelect(table_name="core.appsettings", string_fields_to_select="parameter_value",whereClause=cond_where)
     return r[0]["parameter_value"]        
 
 def isAdministrator(request):

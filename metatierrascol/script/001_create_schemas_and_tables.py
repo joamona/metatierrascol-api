@@ -14,6 +14,7 @@ from django.db import connection
 from pgOperations.pgOperations import PgConnection
 oc=PgConnection(connection)
 
+#creación de esquemas
 print('CREATE SCHEMA IF NOT EXISTS baunit')
 oc.cursor.execute('create schema baunit')
 
@@ -35,7 +36,7 @@ oc.cursor.execute('create schema source')
 print('CREATE SCHEMA IF NOT EXISTS spatialunit')
 oc.cursor.execute('create schema spatialunit')
 
-
+#creación de tablas
 #APP CODELIST
 print('create table codelist.departamento')
 oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.departamento (id serial primary key, departamento varchar, unique(departamento))')
@@ -62,6 +63,14 @@ oc.cursor.execute('CREATE TABLE IF NOT EXISTS codelist.estado_expediente (id ser
 print('create table core.appsettings')
 oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.appsettings (id serial primary key, parameter_name varchar unique, parameter_value varchar, help_en varchar, help_es varchar)')
 
+#almacena los usuarios y los municipios a los que tiene acceso
+print('create table core.acceso_municipio')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.acceso_municipio (id serial primary key, user_id integer not null, municipio_id integer not null, unique(user_id, municipio_id))')
+
+#almacena los usuarios que reciben un email cuando se recibe un fichero
+print('create table core.usuarios_avisados_descarga_zip')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.usuarios_avisados_descarga_zip (id serial primary key, user_id integer not null, unique(user_id))')
+
 #APP BAUNIT
 print('create table baunit.baunit')
 oc.cursor.execute("""CREATE TABLE IF NOT EXISTS baunit.baunit
@@ -81,6 +90,23 @@ oc.cursor.execute("""CREATE TABLE IF NOT EXISTS baunit.baunit
                     estado_expediente_id integer not null
                   )"""
 )
+
+#APP SOURCE
+print('create table source.fichero_zip')
+oc.cursor.execute("""CREATE TABLE IF NOT EXISTS source.fichero_zip
+                  (
+                    id serial primary key,
+                    baunit_id integer not null,
+                    creado_por_id integer not null,
+                    fecha_creacion timestamp not null,
+                    descargado_por_id integer,
+                    fecha_descarga timestamp,
+                    nombre_fichero varchar
+                  )"""
+)
+
+#integridad referencial
+#BAUNIT
 oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_departamento FOREIGN KEY (departamento_id) REFERENCES codelist.departamento(id) on delete no action on update cascade')
 oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_proincia FOREIGN KEY (provincia_id) REFERENCES codelist.provincia(id) on delete no action on update cascade')
 oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_sector_predio FOREIGN KEY (sector_predio_id) REFERENCES codelist.sector(id) on delete no action on update cascade')
@@ -89,7 +115,17 @@ oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_tipo FOREI
 oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_creado_por FOREIGN KEY (creado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
 oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_estado_expediente FOREIGN KEY (estado_expediente_id) REFERENCES codelist.estado_expediente(id) on delete no action on update cascade')
 
+#CORE
+oc.cursor.execute('ALTER TABLE core.acceso_municipio ADD CONSTRAINT fk_acceso_municipio_username FOREIGN KEY (user_id) REFERENCES auth_user(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE core.acceso_municipio ADD CONSTRAINT fk_acceso_municipio_municipio FOREIGN KEY (municipio_id) REFERENCES codelist.municipio(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE core.usuarios_avisados_descarga_zip ADD CONSTRAINT fk_usuarios_avisados_descarga_zip_username FOREIGN KEY (user_id) REFERENCES auth_user(id) on delete no action on update cascade')
+
+#SOURCE
+oc.cursor.execute('ALTER TABLE source.fichero_zip ADD CONSTRAINT fk_source_fichero_zip_baunit FOREIGN KEY (baunit_id) REFERENCES baunit.baunit(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE source.fichero_zip ADD CONSTRAINT fk_source_fichero_zip_creado_por FOREIGN KEY (creado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE source.fichero_zip ADD CONSTRAINT fk_source_fichero_zip_descargado_por FOREIGN KEY (descargado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
+
+
 
 
 oc.commit()
-

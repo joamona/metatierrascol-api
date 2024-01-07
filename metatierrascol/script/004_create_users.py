@@ -1,6 +1,11 @@
 from django.contrib.auth.models import User
 from core.commonlibs import managePermissions
 
+propietario=User.objects.create_user(username='joamona@cgf.upv.es', password='zzzxxxccc')
+propietario.is_active=True
+propietario.email=propietario.username
+propietario.save()
+
 propietario=User.objects.create_user(username='propietario@gmail.com', password='zzzxxxccc')
 propietario.is_active=True
 propietario.email=propietario.username
@@ -33,6 +38,7 @@ igac.save()
 
 print('Usuarios de partida creados: admin, propietario, agrimensor, ant, snr, gestor_catastral e igac')
 
+managePermissions.addUserToGroup(username='joamona@cgf.upv.es', groupname='agrimensor')
 managePermissions.addUserToGroup(username='admin', groupname='admin')
 managePermissions.addUserToGroup(username='propietario@gmail.com', groupname='propietario')
 managePermissions.addUserToGroup(username='agrimensor@gmail.com', groupname='agrimensor')

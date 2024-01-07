@@ -66,7 +66,7 @@ class AppSettingsList(viewsets.ModelViewSet):
         #       detail=True significa que trabaje con varios registros
     def retrieve(self, request, id=None):#fíjate que recibe request y un paraámertro de la url
         #print(self.basename, self.action, self.detail, self.suffix, self.name, self.description)
-        qs2=self.queryset.filter(id__lt=gid)#cojo el queryset de la variable de clase y le aplico
+        qs2=self.queryset.filter(id__lt=id)#cojo el queryset de la variable de clase y le aplico
 			#el filtro gid < the_gid. → lt significa less than
         s = self.get_serializer(qs2, many=True)#obtiene el serializer de la clase
 			#many significa que puede trabajar

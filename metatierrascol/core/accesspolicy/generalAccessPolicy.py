@@ -15,7 +15,7 @@ class AllowAuthenticatedSafeMethodsAdminPostMethods(AccessPolicy):
 
     ]
 
-class AllowAuthenticatedSafeMethodsAndPostMethods(AccessPolicy):
+class Allow_AuthenticatedSafeMethodsAndPostMethods(AccessPolicy):
     statements = [
         {
             "action": ["<safe_methods>","<method:post>"],

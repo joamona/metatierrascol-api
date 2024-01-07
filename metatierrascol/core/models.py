@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+from codelist import models as codelist_models
 
 # Create your models here.
 
@@ -12,3 +15,20 @@ class AppSettings(models.Model):
     class Meta:
         managed = False
         db_table = 'core"."appsettings'
+
+
+class AccesoMunicipio(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user = models.ForeignKey(get_user_model(),  related_name='accesoMunicipio_user_id', on_delete=models.DO_NOTHING)#no se borra el registro
+    municipio = models.ForeignKey(codelist_models.Municipio, on_delete=models.DO_NOTHING,blank = False)
+    class Meta:
+        managed = False
+        db_table = 'core"."acceso_municipio'
+
+
+class UsuariosAvisadosDescargaZip(models.Model):
+    id = models.AutoField(primary_key=True, editable=False)
+    user = models.ForeignKey(get_user_model(),  related_name='usuariosAvisadosDescargaZip_user_id', on_delete=models.DO_NOTHING)#no se borra el registro
+    class Meta:
+        managed = False
+        db_table = 'core"."usuarios_avisados_descarga_zip'
