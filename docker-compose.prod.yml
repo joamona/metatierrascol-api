@@ -1,0 +1,52 @@
+version: '3.2'
+#La primera vez al inicializar con docker-compose up, se crean las imágenes y los contenedores
+#El servicio db tarda mucho y no se inicia bien la api.
+#presionar 
+
+
+#Después de docker-compose up, SOLO LA PRIMERA VEZ, hay que ejecutar el fichero initdb.sh, 
+#del servicio metatierrascol, que está en la misma carpeta que manage.py
+#Para Inicializar la base de datos ejecutar:
+#
+#	docker exec -it metatierrascol_metatierrascol_1 sh -c "./initdb.sh"
+#
+#Si quieres reiniciar la base de datos, hay que borrar el volumen
+#
+# 	docker volume rm metatierrascol_metatierrascol-data
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: "no"
+    env_file:
+      - .env.prod
+    ports:
+      - '5439:5432'
+    volumes: 
+      - metatierrascol-data:/var/lib/postgresql/data
+
+#  apache2:
+#    image: ubuntu/apache2
+#    volumes:
+#      - ./html:/var/www/html
+#    ports:
+#      - 90:80
+
+  metatierrascol:
+      restart: "no"
+      build: ./metatierrascol
+      image: metatierrascol:1
+      command: python manage.py runserver 0.0.0.0:8000
+      volumes:
+        - ./metatierrascol:/usr/src/app
+        - ./metatierrascol/media_root:/usr/src/media_root
+        - ./metatierrascol/static_root/:/usr/src/static_root
+      ports:
+        - 8000:8000
+      env_file:
+        - .env.prod
+      depends_on:
+        - db
+
+volumes:
+  metatierrascol-data:
+    driver: local
