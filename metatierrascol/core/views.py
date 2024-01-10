@@ -1,21 +1,16 @@
 # Create your views here.
 #Django imports
 from django.http import JsonResponse, HttpRequest
-from django.views import View
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
-from django.shortcuts import get_object_or_404
+from django.contrib.auth import login
 
 #rest framework imports
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
-from django_filters import rest_framework as filters
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.views import APIView
 
-from knox.auth import TokenAuthentication
 from knox.views import LoginView as KnoxLoginView
 
 
@@ -33,10 +28,28 @@ def helloWorld(request):
     return Response({"ok":True,"message": "Hello world", "data":[]})
 
 class LoginViewWithKnox(KnoxLoginView):
+    """
+    Login con usuario y contraseña.
+    """
     permission_classes = (AllowAny, )
     serializer_class = serializers.LoginViewWithKnoxSerializer
 
     def post(self, request, format=None):
+        """
+        This text is the description for this API.
+        ---
+        parameters:
+        - name: username
+        description: El nombre del usuario
+        required: true
+        type: string
+        paramType: form
+        - name: password
+        description: Contraseña
+        paramType: form
+        required: true
+        type: string
+        """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.validated_data['user']
@@ -83,3 +96,8 @@ class AppSettingsListQuery(generics.ListAPIView):
     serializer_class = serializers.AppSettingsSerializer #
     permission_classes = [permissions.AllowAny]
     filterset_fields = ['help_es', 'help_en']
+
+class UsuariosAvisadosDescargaZipViewSet(viewsets.ModelViewSet):
+    queryset = models.UsuariosAvisadosDescargaZip.objects.all()
+    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethodsAdminPostMethods,)
+    serializer_class = serializers.UsuariosAvisadosDescargaZipSerializer

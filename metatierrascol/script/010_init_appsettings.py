@@ -20,9 +20,9 @@ pgo=PgOperations(oc, global_print_queries=True)
 
 fa=FieldsAndValues({
     'parameter_name':'borrar_fichero_zip_al_descargar',
-    'parameter_value': True,
-    'help_en':'Deletes the zip with the field data on download de file at the first time',
-    'help_es': 'Borra el fichero con los datos de campo al descargarse por primera vez'})
+    'parameter_value': 'False',
+    'help_en':'If True, deletes the .zip file with the field data on download de file at the first time',
+    'help_es': 'Si es True, se borra el el fichero .zip con los datos de campo al descargarse por primera vez'})
 pgo.pgInsert(table_name='core.appsettings',fieldsAndValues=fa)
 
 

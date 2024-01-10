@@ -93,7 +93,7 @@ oc.cursor.execute("""CREATE TABLE IF NOT EXISTS baunit.baunit
 
 #APP SOURCE
 print('create table source.fichero_zip')
-oc.cursor.execute("""CREATE TABLE IF NOT EXISTS source.fichero_zip
+oc.cursor.execute("""CREATE TABLE IF NOT EXISTS source.archivo_zip
                   (
                     id serial primary key,
                     baunit_id integer not null,
@@ -101,7 +101,8 @@ oc.cursor.execute("""CREATE TABLE IF NOT EXISTS source.fichero_zip
                     fecha_creacion timestamp not null,
                     descargado_por_id integer,
                     fecha_descarga timestamp,
-                    nombre_fichero varchar
+                    archivo varchar,
+                    unique(baunit_id)
                   )"""
 )
 
@@ -121,9 +122,9 @@ oc.cursor.execute('ALTER TABLE core.acceso_municipio ADD CONSTRAINT fk_acceso_mu
 oc.cursor.execute('ALTER TABLE core.usuarios_avisados_descarga_zip ADD CONSTRAINT fk_usuarios_avisados_descarga_zip_username FOREIGN KEY (user_id) REFERENCES auth_user(id) on delete no action on update cascade')
 
 #SOURCE
-oc.cursor.execute('ALTER TABLE source.fichero_zip ADD CONSTRAINT fk_source_fichero_zip_baunit FOREIGN KEY (baunit_id) REFERENCES baunit.baunit(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE source.fichero_zip ADD CONSTRAINT fk_source_fichero_zip_creado_por FOREIGN KEY (creado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE source.fichero_zip ADD CONSTRAINT fk_source_fichero_zip_descargado_por FOREIGN KEY (descargado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE source.archivo_zip ADD CONSTRAINT fk_source_archivo_zip_baunit FOREIGN KEY (baunit_id) REFERENCES baunit.baunit(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE source.archivo_zip ADD CONSTRAINT fk_source_archivo_zip_creado_por FOREIGN KEY (creado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
+oc.cursor.execute('ALTER TABLE source.archivo_zip ADD CONSTRAINT fk_source_archivo_zip_descargado_por FOREIGN KEY (descargado_por_id) REFERENCES auth_user(id) on delete no action on update cascade')
 
 
 

@@ -13,6 +13,9 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+API_URL=os.getenv('API_URL')#El dominio y alias de acceso a la API, con BARRA FINAL. 
+                #Ej https://mydomain.com/metatierrascol-api/
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -169,3 +172,28 @@ REST_KNOX = {
     'TOKEN_TTL': timedelta(hours=24),
     'TOKEN_LIMIT_PER_USER':10,
 }
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+    #"is_authenticated": False,  # Set to True to enforce user authentication,
+    "is_superuser": True,  # Set to True to enforce admin only access
+
+}
+
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
+
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true' #Devuelve True si se cumple
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  #be carefully because this uses has the password @@@munsellpsw111 in the app
+EMAIL_UPV = os.getenv('EMAIL_UPV')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_FROM = os.getenv('EMAIL_FROM')

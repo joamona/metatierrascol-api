@@ -1,11 +1,163 @@
-import json
+import os
 
-from django.views import View
-from django.http import JsonResponse
-from . import manageFiles
+from django.core.mail import send_mail
+from django.http import FileResponse
 
+from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
+from rest_framework import views
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.renderers import JSONRenderer
+
+from pgOperations.pgOperations import WhereClause
+
+from metatierrascol import settings
+from . import serializers
+from .models import ArchivoZip as ArchivoZipModel
+from baunit.serializers import BaunitSerializer
+from core.commonlibs import generalModule
+from core.accesspolicy import generalAccessPolicy
+from core.commonlibs import fileRenderer #necesaro para descargar archivos
+
+#ESTO FUNCIONABA, PERO YA NO SE USA. AHORA USO UNA VISTA MODELVIEWSET
 #las vistas de clase normales también requieren el token
-class AñadeFicheroZip(View):
-    def post(self, request):
-        r=manageFiles.uploadFile(request)
-        return JsonResponse(r)
+# class AñadeFicheroZip(View):
+#     def post(self, request):
+#         r=manageFiles.uploadFile(request)
+#         return JsonResponse(r)
+
+# class PassthroughRenderer(renderers.BaseRenderer):
+#     """
+#         Return data as-is. View should supply a Response.
+#     """
+#     media_type = ''
+#     format = ''
+#     def render(self, data, accepted_media_type=None, renderer_context=None):
+#         return data
+
+class ArchivoZip(viewsets.ModelViewSet):
+    """
+    Crea una baunit, y luego crea el fichero asociado
+    """
+
+
+    parser_classes = (MultiPartParser, JSONRenderer)
+    queryset = ArchivoZipModel.objects.all()
+    serializer_class = serializers.ArchivoZipSerializer
+    permission_classes = (generalAccessPolicy.Allow_AuthenticatedSafeMethodsAndPostMethods,)
+
+    def create(self, request, *args, **kwargs):
+        # Serializa los datos recibidos en la solicitud
+        request.data['estado_expediente']='Recibido'
+        request.data['creado_por']=request.user
+        sbaunit=BaunitSerializer(data=request.data)
+        if sbaunit.is_valid():
+            #print('Es valido')
+            baunit=sbaunit.save()
+        else:
+            #print('s.errors')
+            return Response(sbaunit.errors)
+        
+        archivo = request.FILES['archivo']
+        archivo.filename=str(baunit.id) + '.zip'
+        request.data['archivo']=archivo
+        request.data['baunit']=baunit.id
+        request.data['creado_por']=request.user.id
+        serializer = serializers.ArchivoZipSerializer(data=request.data)
+
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
+
+                if borrar.lower() == 'true':
+                    mensaje = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
+                else:
+                    mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
+            
+                if not(settings.DEBUG):
+                    avisaZipDisponibleDescarga(str(baunit.codigo_acceso))
+                return Response({'mensaje': f'Archivo y datos guardados exitosamente. Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({'error': f'Error al guardar el archivo y los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+# from django.http import FileResponse
+# from rest_framework import viewsets, renderers
+# from rest_framework.decorators import action
+
+
+class DescargaArchivoZipCodigoAcceso(views.APIView):
+    renderer_classes=(fileRenderer.PassthroughRenderer, JSONRenderer)
+    permission_classes = (generalAccessPolicy.AllowAny,)
+    def get(self, request, codigo_acceso):
+        pgo=generalModule.getDjangoPg()
+        wc=WhereClause(where_clause='codigo_acceso=%s', where_values_list=[codigo_acceso])
+        r=pgo.pgSelect(table_name='baunit.baunit',string_fields_to_select='id',
+                     whereClause=wc)
+        if len(r) > 0:
+            baunit_id=r[0]['id']
+            zip: ArchivoZipModel = list(ArchivoZipModel.objects.filter(baunit=baunit_id))[0]
+            ar= str(settings.MEDIA_ROOT) + '/' + zip.archivo.name
+
+            if not(os.path.isfile(ar)):
+                return Response('{"Error":"El fichero ha sido borrado"}', content_type='application/json', status=status.HTTP_404_NOT_FOUND)
+ 
+            file_handle = zip.archivo.open()
+            # send file
+            response = FileResponse(file_handle, content_type='.zip, application/zip, application/octet-stream')
+            response['Content-Length'] = zip.archivo.size
+            response['Content-Disposition'] = 'attachment; filename="%s"' % zip.archivo.name
+            
+            borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
+            if borrar.lower() == 'true':
+                os.remove(ar)
+            return response
+        else:
+            return Response('{"Error":"Codigo no encontrado"}',content_type='application/json', status=status.HTTP_404_NOT_FOUND)
+ 
+def avisaZipDisponibleDescarga(codigo_acceso):
+        pgo=generalModule.getDjangoPg()
+        wc=WhereClause(where_clause='u1.user_id=u2.id', where_values_list=[])
+        r=pgo.pgSelect(table_name='core.usuarios_avisados_descarga_zip as u1, auth_user as u2 ',string_fields_to_select='u2.id, u2.email', whereClause=wc)
+        destinatarios=[]
+        for row in r:
+            destinatarios.append(row['email'])
+        
+        enlace = settings.API_URL + 'source/descarga_zip_codigo_acceso/' + codigo_acceso + '/'
+        borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
+        if borrar.lower() == 'true':
+            aviso = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
+        else:
+            aviso = 'El fichero NO será eliminado después de la primera descarga'
+        
+        send_mail(
+            subject='Proyecto Metatierras Colombia. Fichero de datos de campo disponible para la descarga',
+                  message=f"""Querido usuario,
+
+Tiene disponible el fichero con los datos de la medición en el enlace:
+
+    {enlace}
+
+    {aviso}
+
+Saludos cordiales,
+El equipo de Metatierras Colombia, Universitar Politècnica de València, en colaboración con la Fundación Forjando Futuros.
+
+AVISO LEGAL: La información que se puede obtener con este mensaje es información personal de los 
+usuarios interesados en el expediente de regualrización de tierras. Usted se compromete a hacer un
+buen uso de dicha información, siempre en interés de los usuarios que aparecen en el expediente,
+eximiento al equipo de la Universitat Politècnica de València de cualquier responsabilidad, derivada
+del uso de dicha información.
+
+        """,
+            from_email='metatierras@upv.es',
+            recipient_list=destinatarios
+        )
+
+
+

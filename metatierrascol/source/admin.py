@@ -1,7 +1,7 @@
 from django.contrib import admin
 from . import models
-class FicheroZipAdmin(admin.ModelAdmin):
+class ArchivoZipAdmin(admin.ModelAdmin):
     list_display = ('id', 'baunit_id', 'creado_por_id', 'fecha_creacion', 
-                    'descargado_por_id', 'fecha_descarga', 'nombre_fichero')
+                    'descargado_por_id', 'fecha_descarga', 'archivo')
     
-admin.site.register(models.FicheroZip, FicheroZipAdmin)
+admin.site.register(models.ArchivoZip, ArchivoZipAdmin)

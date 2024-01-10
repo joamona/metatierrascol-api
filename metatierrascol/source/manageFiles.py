@@ -1,10 +1,10 @@
-import os, io
+#ESTE MÓDULO FUNCIONA, PERO YA NO SE USA
+
+import io
 from django.http import HttpRequest
 
-from baunit.models import Baunit
 from baunit.serializers import BaunitSerializer
 from .models import FicheroZip
-from metatierrascol import settings
 from core.commonlibs import generalModule
 from core.commonlibs.validators import isValidFileExtension
 
@@ -25,8 +25,7 @@ def uploadFile(request: HttpRequest):
        "numero_predial":numero_predial, "tipo":tipo,
        "complemento":complemento, "estado_expediente": estado_expediente,
        "creado_por":creado_por}
-    
-    print("Qué pasa")
+
     s=BaunitSerializer(data=d)
     if s.is_valid():
         print('Es valido')

@@ -1,5 +1,14 @@
 from rest_access_policy import AccessPolicy
 
+class AllowAny(AccessPolicy):
+    statements = [
+        {
+            "action": ["*"],
+            "principal": "*",
+            "effect": "allow"
+        }
+    ]
+
 class AllowAuthenticatedSafeMethodsAdminPostMethods(AccessPolicy):
     statements = [
         {
