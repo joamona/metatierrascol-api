@@ -21,9 +21,10 @@ class BaunitViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BaunitSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data['estado_expediente']='Recibido'
-        request.data['creado_por']=request.user
-        serializer=serializers.BaunitSerializer(data=request.data)
+        data=request.data.copy()
+        data['estado_expediente']='Recibido'
+        data['creado_por']=request.user
+        serializer=serializers.BaunitSerializer(data=data)
         #Esto funcionaba
         #   r=super().create(request, *args, **kwargs)
         #   return r
@@ -31,13 +32,22 @@ class BaunitViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             try:
                 serializer.save()
-                return Response({'mensaje': 'Archivo y datos guardados exitosamente.', 'elemento':serializer.data}, status=status.HTTP_201_CREATED)
+                return Response({'mensaje': 'Datos guardados exitosamente.', 'elemento':serializer.data}, status=status.HTTP_201_CREATED)
             except Exception as e:
-                return Response({'error': f'Error al guardar el archivo y los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                return Response({'error': f'Error al guardar los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
  
     def update(self, request, *args, **kwargs):
-        request.data['creado_por']=request.user
-        r=super().update(request, *args, **kwargs)
-        return r
+        data=request.data.copy()
+        data['creado_por']=request.user
+        o=self.get_object()
+        serializer=serializers.BaunitSerializer(instance=o,data=data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response({'mensaje': 'Datos actualizados exitosamente.', 'elemento':serializer.data}, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({'error': f'Error al actualizar los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

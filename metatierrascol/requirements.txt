@@ -9,3 +9,4 @@ pgOperations==0.0.3
 datetime==5.3
 django-filter==23.5
 drf-access-policy==1.5.0
+gunicorn==21.2.0

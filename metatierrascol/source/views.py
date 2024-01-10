@@ -51,22 +51,25 @@ class ArchivoZip(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         # Serializa los datos recibidos en la solicitud
-        request.data['estado_expediente']='Recibido'
-        request.data['creado_por']=request.user
-        sbaunit=BaunitSerializer(data=request.data)
+        data=request.data.copy()#hago esto porque request.data es inmutable en la versión 4.2.7 de django
+        data['estado_expediente']='Recibido'
+        data['creado_por']=request.user
+        sbaunit=BaunitSerializer(data=data)
         if sbaunit.is_valid():
             #print('Es valido')
             baunit=sbaunit.save()
         else:
             #print('s.errors')
             return Response(sbaunit.errors)
-        
+        print(data)
+        print(request.data)
+        print(request.FILES)
         archivo = request.FILES['archivo']
         archivo.filename=str(baunit.id) + '.zip'
-        request.data['archivo']=archivo
-        request.data['baunit']=baunit.id
-        request.data['creado_por']=request.user.id
-        serializer = serializers.ArchivoZipSerializer(data=request.data)
+        data['archivo']=archivo
+        data['baunit']=baunit.id
+        data['creado_por']=request.user.id
+        serializer = serializers.ArchivoZipSerializer(data=data)
 
         if serializer.is_valid():
             try:
