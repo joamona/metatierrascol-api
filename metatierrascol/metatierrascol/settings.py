@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-+z_6n94l($5goa6gopn&ugrsy#+g8i@w3zctzt+knb%&&l)z2v
 DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = [os.getenv('DJANGO_ALLOWED_HOSTS')]
-
+CSRF_TRUSTED_ORIGINS=['https://metatierrascol.upvusig.car.upv.es']
 
 # Application definition
 
