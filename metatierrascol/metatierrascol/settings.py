@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+FORCE_SCRIPT_NAME=os.getenv('FORCE_SCRIPT_NAME')
 API_URL=os.getenv('API_URL')#El dominio y alias de acceso a la API, con BARRA FINAL. 
                 #Ej https://mydomain.com/metatierrascol-api/
 
