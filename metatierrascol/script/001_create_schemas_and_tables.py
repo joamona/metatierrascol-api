@@ -102,6 +102,7 @@ oc.cursor.execute("""CREATE TABLE IF NOT EXISTS source.archivo_zip
                     descargado_por_id integer,
                     fecha_descarga timestamp,
                     archivo varchar,
+                    url_descarga varchar,
                     unique(baunit_id)
                   )"""
 )

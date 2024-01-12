@@ -61,9 +61,9 @@ class ArchivoZip(viewsets.ModelViewSet):
         else:
             #print('s.errors')
             return Response(sbaunit.errors)
-        print(data)
-        print(request.data)
-        print(request.FILES)
+        #print(data)
+        #print(request.data)
+        #print(request.FILES)
         archivo = request.FILES['archivo']
         archivo.filename=str(baunit.id) + '.zip'
         data['archivo']=archivo
@@ -73,7 +73,9 @@ class ArchivoZip(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             try:
-                serializer.save()
+                ar=serializer.save()
+                ar.url_descarga=settings.API_URL + 'source/descarga_zip_codigo_acceso/' + str(baunit.codigo_acceso) + '/'
+                ar.save()
                 borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
 
                 if borrar.lower() == 'true':

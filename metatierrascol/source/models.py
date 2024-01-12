@@ -11,6 +11,7 @@ class ArchivoZip(models.Model):
     descargado_por = models.ForeignKey(get_user_model(), blank=True, related_name='descargado_por', on_delete=models.DO_NOTHING)#no se borra el registro
     fecha_descarga = models.DateTimeField(blank = True)
     archivo = models.FileField(upload_to='ficheros_zip')
+    url_descarga = models.URLField(max_length=400, blank=True)
     class Meta:
         managed = False
         db_table = 'source"."archivo_zip'
