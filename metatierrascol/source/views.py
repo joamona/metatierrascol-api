@@ -82,9 +82,9 @@ class ArchivoZip(viewsets.ModelViewSet):
                     mensaje = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
                 else:
                     mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
-            
+                
                 if not(settings.DEBUG):
-                    avisaZipDisponibleDescarga(str(baunit.codigo_acceso))
+                    avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username)
                 return Response({'mensaje': f'Archivo y datos guardados exitosamente. Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': f'Error al guardar el archivo y los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -125,7 +125,7 @@ class DescargaArchivoZipCodigoAcceso(views.APIView):
         else:
             return Response('{"Error":"Codigo no encontrado"}',content_type='application/json', status=status.HTTP_404_NOT_FOUND)
  
-def avisaZipDisponibleDescarga(codigo_acceso):
+def avisaZipDisponibleDescarga(codigo_acceso, username):
         pgo=generalModule.getDjangoPg()
         wc=WhereClause(where_clause='u1.user_id=u2.id', where_values_list=[])
         r=pgo.pgSelect(table_name='core.usuarios_avisados_descarga_zip as u1, auth_user as u2 ',string_fields_to_select='u2.id, u2.email', whereClause=wc)
@@ -144,7 +144,8 @@ def avisaZipDisponibleDescarga(codigo_acceso):
             subject='Proyecto Metatierras Colombia. Fichero de datos de campo disponible para la descarga',
                   message=f"""Querido usuario,
 
-Tiene disponible el fichero con los datos de la medición en el enlace:
+El usuario {username} acaba de subir un fichero con una medición.
+Puede descargar el fichero en el siguiente enlace:
 
     {enlace}
 
