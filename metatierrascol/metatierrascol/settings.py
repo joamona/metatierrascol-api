@@ -194,8 +194,8 @@ LOGOUT_URL = 'rest_framework:logout'
 EMAIL_HOST = os.getenv('EMAIL_HOST')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true' #Devuelve True si se cumple
 EMAIL_PORT = os.getenv('EMAIL_PORT')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  #be carefully because this uses has the password @@@munsellpsw111 in the app
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_UPV = os.getenv('EMAIL_UPV')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_FROM = os.getenv('EMAIL_FROM')
-ADMINS=[('Gaspar Mora', 'joamona@cgf.upv.es')]
+ADMINS=[('Gaspar Mora', 'joamona@cgf.upv.es'),('Diego Terevinto','diegoterevinto@gmail.com' )]
