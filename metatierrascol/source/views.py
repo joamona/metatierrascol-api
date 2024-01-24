@@ -1,4 +1,4 @@
-import os
+import os, sys
 
 from django.core.mail import send_mail
 from django.http import FileResponse
@@ -50,7 +50,7 @@ class ArchivoZip(viewsets.ModelViewSet):
     permission_classes = (generalAccessPolicy.Allow_AuthenticatedSafeMethodsAndPostMethods,)
 
     def create(self, request, *args, **kwargs):
-        # Serializa los datos recibidos en la solicitud
+        # Serializa los datos recibidos en la solicitud       
         data=request.data.copy()#hago esto porque request.data es inmutable en la versión 4.2.7 de django
         data['estado_expediente']='Recibido'
         data['creado_por']=request.user
@@ -65,8 +65,7 @@ class ArchivoZip(viewsets.ModelViewSet):
         #print(request.data)
         #print(request.FILES)
         archivo = request.FILES['archivo']
-        print(archivo.size)
-        print(archivo.filename)
+        tamaño=len(archivo.file.getvalue())/1000000
         archivo.filename=str(baunit.id) + '.zip'
         data['archivo']=archivo
         data['baunit']=baunit.id
@@ -76,19 +75,16 @@ class ArchivoZip(viewsets.ModelViewSet):
         if serializer.is_valid():
             try:
                 ar=serializer.save()
-                print("Archivo salvado")
                 ar.url_descarga=settings.API_URL + 'source/descarga_zip_codigo_acceso/' + str(baunit.codigo_acceso) + '/'
                 ar.save()
                 borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
-
                 if borrar.lower() == 'true':
                     mensaje = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
                 else:
                     mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
-                
                 if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
-                    avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username)
-                return Response({'mensaje': f'Archivo y datos guardados exitosamente. Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
+                    avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
+                return Response({'mensaje': f'Archivo y datos guardados exitosamente ({tamaño} mb). Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': f'Error al guardar el archivo y los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
@@ -128,7 +124,7 @@ class DescargaArchivoZipCodigoAcceso(views.APIView):
         else:
             return Response('{"Error":"Codigo no encontrado"}',content_type='application/json', status=status.HTTP_404_NOT_FOUND)
  
-def avisaZipDisponibleDescarga(codigo_acceso, username):
+def avisaZipDisponibleDescarga(codigo_acceso, username, tamaño, data):
         pgo=generalModule.getDjangoPg()
         wc=WhereClause(where_clause='u1.user_id=u2.id', where_values_list=[])
         r=pgo.pgSelect(table_name='core.usuarios_avisados_descarga_zip as u1, auth_user as u2 ',string_fields_to_select='u2.id, u2.email', whereClause=wc)
@@ -144,18 +140,27 @@ def avisaZipDisponibleDescarga(codigo_acceso, username):
             aviso = 'El fichero NO será eliminado después de la primera descarga'
         
         send_mail(
-            subject='Proyecto Metatierras Colombia. Fichero de datos de campo disponible para la descarga',
+            subject='Proyecto MetaTierras Colombia. Fichero de datos de campo disponible para la descarga',
                   message=f"""Querido usuario,
 
 El usuario {username} acaba de subir un fichero con una medición.
-Puede descargar el fichero en el siguiente enlace:
+Puede descargar el fichero ({tamaño} mb) en el siguiente enlace:
 
     {enlace}
 
     {aviso}
 
+    Datos del predio:
+        Nombre: {data['nombre']}
+        Departamento: {data['departamento']}
+        Provincia: {data['provincia']}
+        Sector: {data['sector']}
+        Numero predial: {data['numero_predial']}
+        Tipo: {data['tipo']}
+        Complemento: {data['complemento']}
+
 Saludos cordiales,
-El equipo de Metatierras Colombia, Universitar Politècnica de València, en colaboración con la Fundación Forjando Futuros.
+El equipo de MetaTierras Colombia, Universitat Politècnica de València, en colaboración con la Fundación Forjando Futuros.
 
 AVISO LEGAL: La información que se puede obtener con este mensaje es información personal de los 
 usuarios interesados en el expediente de regualrización de tierras. Usted se compromete a hacer un

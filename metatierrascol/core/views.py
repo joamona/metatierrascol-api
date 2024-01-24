@@ -57,8 +57,8 @@ class LoginViewWithKnox(KnoxLoginView):
             response = super().post(request, format=None)
         else:
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-        print('Validated data')
-        print(serializer.validated_data)
+        #print('Validated data')
+        #print(serializer.validated_data)
         v=response.data #the response with the authentication token
         groups = managePermissions.getUserGroups_fromUsername(request.data['username'])
         v['groups'] = groups #la lista de grupos a los que pertenece el usuario
