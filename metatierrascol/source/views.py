@@ -65,6 +65,8 @@ class ArchivoZip(viewsets.ModelViewSet):
         #print(request.data)
         #print(request.FILES)
         archivo = request.FILES['archivo']
+        print(archivo.size)
+        print(archivo.filename)
         archivo.filename=str(baunit.id) + '.zip'
         data['archivo']=archivo
         data['baunit']=baunit.id
@@ -74,6 +76,7 @@ class ArchivoZip(viewsets.ModelViewSet):
         if serializer.is_valid():
             try:
                 ar=serializer.save()
+                print("Archivo salvado")
                 ar.url_descarga=settings.API_URL + 'source/descarga_zip_codigo_acceso/' + str(baunit.codigo_acceso) + '/'
                 ar.save()
                 borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
@@ -83,7 +86,7 @@ class ArchivoZip(viewsets.ModelViewSet):
                 else:
                     mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
                 
-                if not(settings.DEBUG):
+                if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
                     avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username)
                 return Response({'mensaje': f'Archivo y datos guardados exitosamente. Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
             except Exception as e:
