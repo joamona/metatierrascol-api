@@ -170,7 +170,7 @@ REST_FRAMEWORK = {
 }
 REST_KNOX = {
     #'USER_SERIALIZER':'accounts.serializers.UserSerializer',
-    'TOKEN_TTL': timedelta(hours=24),
+    'TOKEN_TTL': timedelta(hours=72),
     'TOKEN_LIMIT_PER_USER':10,
 }
 
