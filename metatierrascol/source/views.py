@@ -168,7 +168,7 @@ Puede descargar el fichero ({tamaño} mb) en el siguiente enlace:
         Nombre: {data['nombre']}
         Departamento: {data['departamento']}
         Provincia: {data['provincia']}
-        Sector: {data['sector']}
+        Sector: {data['sector_predio']}
         Numero predial: {data['numero_predial']}
         Tipo: {data['tipo']}
         Complemento: {data['complemento']}
