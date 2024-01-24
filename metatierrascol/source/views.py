@@ -74,21 +74,33 @@ class ArchivoZip(viewsets.ModelViewSet):
         serializer = serializers.ArchivoZipSerializer(data=data)
 
         if serializer.is_valid():
-            try:
-                ar=serializer.save()
-                ar.url_descarga=settings.API_URL + 'source/descarga_zip_codigo_acceso/' + str(baunit.codigo_acceso) + '/'
-                ar.save()
-                borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
-                if borrar.lower() == 'true':
-                    mensaje = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
-                else:
-                    mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
-                if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
-                    avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
-                return Response({'mensaje': f'Archivo y datos guardados exitosamente ({tamaño} mb). Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                print(e)
-                return Response({'error': f'Error al guardar el archivo y los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            ar=serializer.save()
+            ar.url_descarga=settings.API_URL + 'source/descarga_zip_codigo_acceso/' + str(baunit.codigo_acceso) + '/'
+            ar.save()
+            borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
+            if borrar.lower() == 'true':
+                mensaje = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
+            else:
+                mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
+            if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
+                avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
+            return Response({'mensaje': f'Archivo y datos guardados exitosamente ({tamaño} mb). Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
+            # try:
+            #     pass
+            #     # ar=serializer.save()
+            #     # ar.url_descarga=settings.API_URL + 'source/descarga_zip_codigo_acceso/' + str(baunit.codigo_acceso) + '/'
+            #     # ar.save()
+            #     # borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
+            #     # if borrar.lower() == 'true':
+            #     #     mensaje = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
+            #     # else:
+            #     #     mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
+            #     # if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
+            #     #     avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
+            #     # return Response({'mensaje': f'Archivo y datos guardados exitosamente ({tamaño} mb). Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
+            # except Exception as e:
+            #     print(e)
+            #     return Response({'error': f'Error al guardar el archivo y los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
