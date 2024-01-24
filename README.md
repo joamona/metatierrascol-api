@@ -1,7 +1,7 @@
 # Bienvenido al proyecto Metatierras Colombia
 
-Metatierras colombia es un proyecto financiado por la <a href='https://www.upv.es/'>Universitat Politècnica de València</a>, 
-y realizado en colaboración con la <a href='https://www.forjandofuturos.org/'> Fundación Forjado Futuros</a>.
+Metatierras Colombia es un proyecto ADSIDEO financiado por el área de cooperación al desarrollo de la <a href='https://www.upv.es/'>Universitat Politècnica de València</a>, 
+y realizado en colaboración con la <a href='https://www.forjandofuturos.org/'> Fundación Forjado Futuros</a>, y con la <a href="https://www.acpp.com/">Asamblea de Cooperación por la Paz</a>.
 
 El objetivo del proyecto es diseñar software libre para la agilización de la regularización 
 de tierras rústicas en Colombia.
