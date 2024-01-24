@@ -66,6 +66,7 @@ class ArchivoZip(viewsets.ModelViewSet):
         #print(request.FILES)
         archivo = request.FILES['archivo']
         tamaño=len(archivo.file.getvalue())/1000000
+        print(f'Tamaño archivo: {tamaño}')
         archivo.filename=str(baunit.id) + '.zip'
         data['archivo']=archivo
         data['baunit']=baunit.id
@@ -86,6 +87,7 @@ class ArchivoZip(viewsets.ModelViewSet):
                     avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
                 return Response({'mensaje': f'Archivo y datos guardados exitosamente ({tamaño} mb). Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
             except Exception as e:
+                print(e)
                 return Response({'error': f'Error al guardar el archivo y los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
