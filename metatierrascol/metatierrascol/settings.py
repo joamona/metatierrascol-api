@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [os.getenv('DJANGO_ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS=['https://metatierrascol.upvusig.car.upv.es']
 
 DJANGO_SEND_EMAIL_ON_FILE_UPLOAD=os.getenv('DJANGO_SEND_EMAIL_ON_FILE_UPLOAD').lower() in ('true', '1', 't')
-FILE_UPLOAD_MAX_MEMORY_SIZE = os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE')
+FILE_UPLOAD_MAX_MEMORY_SIZE = float(os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE'))
 # Application definition
 
 INSTALLED_APPS = [
