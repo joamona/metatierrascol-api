@@ -33,7 +33,7 @@ DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't')
 ALLOWED_HOSTS = [os.getenv('DJANGO_ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS=['https://metatierrascol.upvusig.car.upv.es']
 
-FILE_UPLOAD_MAX_MEMORY_SIZE = 100 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE')
 # Application definition
 
 INSTALLED_APPS = [
