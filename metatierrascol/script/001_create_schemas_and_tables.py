@@ -87,7 +87,10 @@ oc.cursor.execute("""CREATE TABLE IF NOT EXISTS baunit.baunit
                     creado_por_id integer not null,
                     fecha_creacion timestamp not null,
                     codigo_acceso varchar not null,
-                    estado_expediente_id integer not null
+                    estado_expediente_id integer not null,
+                    longitud float,
+                    latitud float,
+                    numero_catastral varchar
                   )"""
 )
 

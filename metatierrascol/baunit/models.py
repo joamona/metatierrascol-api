@@ -13,10 +13,10 @@ from codelist import models as codelist_models
 
 #-------------------------------------------------
 #EN LOS MODELOS:
-#   campos requeridos se marcan con ,blank = True
-#   campos NO requeridos se marcan con ,blank = False (defecto)
+#   campos NOrequeridos se marcan con ,blank = True
+#   campos requeridos se marcan con ,blank = False (defecto)
 #EN LOS SERIALIZADORES:
-#   Los campos no requeridos para el usuario en el serializador se marcan com required=True (Defecto)
+#   Los campos requeridos para el usuario en el serializador se marcan com required=True (Defecto)
 #-------------------------------------------------
 
 
@@ -36,6 +36,9 @@ class Baunit(models.Model):
     tipo = models.ForeignKey(codelist_models.Lc_prediotipo, on_delete=models.DO_NOTHING,blank = False)
     complemento = models.TextField(blank = False, max_length=200,  help_text='Complemento de la dirección para ayudar a localizar el predio')
     estado_expediente = models.ForeignKey(codelist_models.EstadoExpediente, on_delete=models.DO_NOTHING, blank = True) 
+    longitud = models.FloatField(blank=True,help_text="Longitud del punto central del predio")
+    latitud = models.FloatField(blank=True,help_text="Latitud del punto central del predio")
+    numero_catastral = models.TextField(max_length=30, blank = True)
     class Meta:
         managed = False
         db_table = 'baunit"."baunit'

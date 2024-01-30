@@ -27,6 +27,13 @@ def notLoggedIn(request: HttpRequest):
 def helloWorld(request):
     return Response({"ok":True,"message": "Hello world", "data":[]})
 
+@api_view(http_method_names=['GET'])
+@permission_classes((permissions.IsAuthenticated,))
+def isValidToken(request):
+    groups = managePermissions.getUserGroups_fromUsername(request.data['username'])
+    return Response({"detail": "Valid token.", "username": request.data['username'],
+                    "groups":groups})
+
 class LoginViewWithKnox(KnoxLoginView):
     """
     Login con usuario y contraseña.

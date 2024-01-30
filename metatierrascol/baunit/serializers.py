@@ -14,13 +14,12 @@ class BaunitSerializer(serializers.ModelSerializer):
     municipio=serializers.SlugRelatedField(queryset=Municipio.objects.all(),slug_field='nombre_municipio',read_only=False, many=False,required=True)
     tipo=serializers.SlugRelatedField(queryset=Lc_prediotipo.objects.all(),slug_field='lc_prediotipo',read_only=False, many=False,required=True)
     estado_expediente=serializers.SlugRelatedField(queryset=EstadoExpediente.objects.all(),slug_field='estado_expediente',read_only=False, many=False,required=False)
-
     class Meta:
         model=Baunit
         fields = ['id','creado_por', 'fecha_creacion',
                    'codigo_acceso','nombre','provincia',
                    'departamento','sector_predio','municipio','numero_predial',
-                   'tipo','complemento', 'estado_expediente']
+                   'tipo','complemento', 'estado_expediente', 'longitud', 'latitud', 'numero_catastral']
 
     # def create(self, validated_data):
     #     # print('validated_data')
