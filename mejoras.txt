@@ -34,5 +34,22 @@ En avanzadas, poner dos botones:
 			{"detail":"Authentication credentials were not provided."}
 		- Si pasas un token no válido, o caducado:
 			{"detail":"Invalid token."}
-			
+
+
+Respuesta al hacer login ok:
+	- {"expiry":"2024-02-03T16:15:33.046090+01:00","token":"d823040035440ad043b7316fc6c6e7c37c01338d38d2c5faef21c954553c9423","groups":["admin"]}
+		STATUS 200
+	- Mal --> {
+    			"non_field_errors": [
+        		"Usuario o contraseña erróneos."
+   			 ]
+		}
+		status 400 bad request
+		
+Poner un botón en el header para ir a un nuevo componente que sea el centro de mensajes, y reportar aí mensajes de la app, y respuestas del servidor.
+	app: mens
+	servidor: resp	
+	
+
+	
 			

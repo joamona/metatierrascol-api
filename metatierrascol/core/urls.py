@@ -13,7 +13,7 @@ router.register(r'usuarios_avisados_descarga_zip',views.UsuariosAvisadosDescarga
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('hello_world/', views.helloWorld, name='hello_world'),
-    path('is_valid_token/', views.isValidToken, name='is_valid_token'),
+    path('knox/is_valid_token/', views.isValidToken, name='is_valid_token'),
     path('knox/login/', views.LoginViewWithKnox.as_view(), name='knox_login'),
     path('knox/logout/', knox_views.LogoutView.as_view(), name='knox_logout'),
     path('knox/logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),    

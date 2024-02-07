@@ -1,7 +1,6 @@
 # Create your views here.
 #Django imports
 from django.http import JsonResponse, HttpRequest
-from django.contrib.auth.models import User
 from django.contrib.auth import login
 
 #rest framework imports
@@ -12,12 +11,14 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 
 from knox.views import LoginView as KnoxLoginView
+from knox.auth import TokenAuthentication
 
 
 #mis módulos
 from . import serializers, models
 from .commonlibs import managePermissions
 from .accesspolicy import generalAccessPolicy
+from core.commonlibs import generalModule
 
 def notLoggedIn(request: HttpRequest):
     return JsonResponse({"ok":False,"message": "You are not logged in", "data":[]})
@@ -30,9 +31,16 @@ def helloWorld(request):
 @api_view(http_method_names=['GET'])
 @permission_classes((permissions.IsAuthenticated,))
 def isValidToken(request):
-    groups = managePermissions.getUserGroups_fromUsername(request.data['username'])
-    return Response({"detail": "Valid token.", "username": request.data['username'],
+    token = request.META.get('HTTP_AUTHORIZATION', False)
+    if token:
+        token = str(token).split()[1].encode("utf-8")
+        knoxAuth = TokenAuthentication()
+        user, auth_token = knoxAuth.authenticate_credentials(token)
+        groups = managePermissions.getUserGroups_fromUsername(user.username)
+        return Response({"detail": "Valid token.", "username": user.username,
                     "groups":groups})
+    else: 
+        return Response({'error':'Token no encontrado'}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginViewWithKnox(KnoxLoginView):
     """
