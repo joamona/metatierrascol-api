@@ -32,7 +32,7 @@ class Baunit(models.Model):
     provincia = models.ForeignKey(codelist_models.Provincia, on_delete=models.DO_NOTHING,blank = False)
     sector_predio = models.ForeignKey(codelist_models.Sector, on_delete=models.DO_NOTHING,blank = False)
     municipio = models.ForeignKey(codelist_models.Municipio, on_delete=models.DO_NOTHING,blank = False)
-    numero_predial = models.TextField(blank = True,max_length=50, unique=True)
+    numero_predial = models.TextField(blank = True,max_length=50)
     tipo = models.ForeignKey(codelist_models.Lc_prediotipo, on_delete=models.DO_NOTHING,blank = False)
     complemento = models.TextField(blank = False, max_length=200,  help_text='Complemento de la dirección para ayudar a localizar el predio')
     estado_expediente = models.ForeignKey(codelist_models.EstadoExpediente, on_delete=models.DO_NOTHING, blank = True) 
