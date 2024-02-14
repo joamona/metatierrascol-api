@@ -24,19 +24,7 @@ Esta API recibe los datos de la aplicación móvil de toma de datos de campo, y 
 
 En la carpeta donde está el fichero .yml, ejecutar:
 
-	docker-compose up
-
-Detener los servicios
-
-	control + c
-
-o
-
-	docker-compose stop
-
-Arrancar de nuevo los servicios
-
-	docker-compose up
+	docker-compose up -d
 
 4. Inicializar la base de datos
 

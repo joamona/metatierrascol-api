@@ -1,4 +1,4 @@
-version: '3.2'
+#version: '3.2'
 #La primera vez al inicializar con docker-compose up, se crean las imágenes y los contenedores
 #El servicio db tarda mucho y no se inicia bien la api.
 #presionar 
@@ -23,7 +23,11 @@ services:
       - '5439:5432'
     volumes: 
       - metatierrascol-data:/var/lib/postgresql/data
-
+    healthcheck:
+        test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+        interval: 10s
+        timeout: 5s
+        retries: 5
 #  apache2:
 #    image: ubuntu/apache2
 #    volumes:
@@ -45,7 +49,8 @@ services:
       env_file:
         - .env.prod
       depends_on:
-        - db
+        db:
+          condition: service_healthy
 
 volumes:
   metatierrascol-data:
