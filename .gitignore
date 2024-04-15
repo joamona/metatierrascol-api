@@ -88,3 +88,7 @@ metatierrascol/media_root/*
 !metatierrascol/media_root/noMeBorres.txt
 
 .env.prod
+
+postgis-data
+pgadmin4
+geoserver
