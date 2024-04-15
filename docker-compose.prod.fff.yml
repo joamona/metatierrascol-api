@@ -37,7 +37,7 @@ services:
       - .env.dev
     volumes:
       - ./pgadmin4/data:/var/lib/pgadmin
-      - ./pgadmin4/servers/servers.json:/pgadmin4/servers.json
+#      - ./pgadmin4/servers/servers.json:/pgadmin4/servers.json
     ports:
       - ${PGADMIN4_FORWARDED_PORT}:80
     restart: "no"
