@@ -18,7 +18,7 @@ services:
     image: postgis/postgis:16-3.4
     restart: unless-stopped
     env_file:
-      - .env.dev
+      - .env.prod
     ports:
       - ${POSTGRES_FORWARDED_PORT}:5432
     volumes:   
@@ -34,7 +34,7 @@ services:
   pgadmin4:
     image: dpage/pgadmin4:8.3
     env_file:
-      - .env.dev
+      - .env.prod
     volumes:
       - ./pgadmin4/data:/var/lib/pgadmin
 #      - ./pgadmin4/servers/servers.json:/pgadmin4/servers.json
@@ -54,7 +54,7 @@ services:
       - ${GEOSERVER_FORWARDED_PORT}:8080
     env_file:
         - .env
-        - .env.dev
+        - .env.prod
     volumes:
       - ${FFF_VOLUME_GEOSERVER_DATA}:/opt/geoserver_data/:Z
       - ${FFF_VOLUME_GEOSERVER_ADDITIONAL_LIBS}:/opt/additional_libs:Z # by mounting this we can install libs from host on startup
@@ -73,7 +73,7 @@ services:
       ports:
         - ${METATIERRAS_FORWARDED_PORT}:8000
       env_file:
-        - .env.dev
+        - .env.prod
       depends_on:
         postgis:
           condition: service_healthy
