@@ -4,7 +4,7 @@ from rest_framework import serializers
 from .models import MobileAppVersion, MobileAppVersionNotes
 
 class MobileAppVersionSerializer(serializers.ModelSerializer):
-    creado_por=serializers.SlugRelatedField(queryset=User.objects.all(),slug_field='username',read_only=False, many=False,required=False)
+    #creado_por=serializers.SlugRelatedField(queryset=User.objects.all(),slug_field='username',read_only=False, many=False,required=False)
 
     class Meta:
         model=MobileAppVersion
