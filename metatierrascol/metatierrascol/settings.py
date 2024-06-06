@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'rrr',#derechos
     'baunit',#unidades basicas (predios)
     'spatialunit',#unidades espaciales, un predio puede tener varias versiones de unidad espacial
-    'source'#manejo de documentos
+    'source',#manejo de documentos
+    'mobileappversion'
 ]
 
 MIDDLEWARE = [

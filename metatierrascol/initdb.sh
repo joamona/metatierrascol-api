@@ -1,5 +1,5 @@
 #/bin/sh
-python remove_migration_files.py
+#python remove_migration_files.py  -->No necesario git ya no sigue los ficheros de las migraciones
 python manage.py makemigrations
 python manage.py migrate
 DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD} python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_USERNAME} --email ${DJANGO_SUPERUSER_EMAIL}
@@ -14,6 +14,7 @@ python manage.py shell < script/008_init_sector.py
 python manage.py shell < script/009_init_estado_expediente_predio.py
 python manage.py shell < script/010_init_appsettings.py
 python manage.py shell < script/011_init_usuarios_avisados_descarga_zip.py
+python manage.py shell < script/012_create_tables_mobileappversion.py
 
 
 

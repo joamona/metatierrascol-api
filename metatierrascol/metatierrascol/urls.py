@@ -45,6 +45,8 @@ urlpatterns = [
     path('party/', include('party.urls')),
     path('baunit/', include('baunit.urls')),    
     path('source/', include('source.urls')),    
+    path('mobileappversion/', include('mobileappversion.urls')),    
+
 ]
 
 #A JSON view of your API specification at /swagger.json

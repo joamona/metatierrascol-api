@@ -1,0 +1,21 @@
+La X indica que está hecho.
+
+- Hasta el script 011 hecho en:
+    * Desarrollo: X
+    * Producción: X
+
+inif_db.sh para ejecutará todos los scripts, desde el primero al último.
+Es para iniciar una bbdd desde cero.
+
+En el servidor upvusig, y fff se han ejecutado los scripts hasta el 11.
+Para conservar los datos de la bbdd, 
+si hay que cambiar tablas, añadir tablas, o editar algo, 
+se edita, no se borra y luego se crea, con scripts mayores del 011.
+
+Para ejecutar scripts por separado:
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/011_init_usuarios_avisados_descarga_zip.py"
+
+
+
+
+
