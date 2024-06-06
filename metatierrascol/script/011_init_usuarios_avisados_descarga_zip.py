@@ -3,6 +3,9 @@ Created on Dec 6, 2023
 
 @author: joamona
 
+Añade la lista inicial de usuarios que reciben el email de aviso para la descarga
+del fichero.
+
 Creo las tablas manualmente porque Django, cuando las crea al hacer las migraciones,
 no establece qué hacer ON UPDATE, en los campos de clave foránea.
 

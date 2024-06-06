@@ -88,7 +88,8 @@ class AppSettingsList(viewsets.ModelViewSet):
     queryset = models.AppSettings.objects.all()#el queriset trabaja con todos los obj
 						#es una variable de clase
     serializer_class = serializers.AppSettingsSerializer #es una variable de clase
-    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethods,)#esto permite a todos los métodos ser usados, 
+    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethods,)#esto permite 
+        #a todos los métodos ser usados, 
         #pero cada método puede tener unos permisos diferentes con el siguiente decorador:
         # @action(detail=True, methods=['post'], permission_classes=[IsAdminOrIsSelf])
         #       detail=True significa que trabaje con varios registros

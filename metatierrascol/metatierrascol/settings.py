@@ -33,8 +33,8 @@ DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't')
 ALLOWED_HOSTS = [os.getenv('DJANGO_ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS=['https://metatierrascol.upvusig.car.upv.es']
 
-DJANGO_SEND_EMAIL_ON_FILE_UPLOAD=os.getenv('DJANGO_SEND_EMAIL_ON_FILE_UPLOAD').lower() in ('true', '1', 't')
-FILE_UPLOAD_MAX_MEMORY_SIZE = float(os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE'))
+DJANGO_SEND_EMAIL_ON_FILE_UPLOAD=os.getenv('DJANGO_SEND_EMAIL_ON_FILE_UPLOAD','True').lower() in ('true', '1', 't')
+FILE_UPLOAD_MAX_MEMORY_SIZE = float(os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE','204857600'))
 # Application definition
 
 INSTALLED_APPS = [
@@ -194,7 +194,7 @@ LOGOUT_URL = 'rest_framework:logout'
 
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS').lower() == 'true' #Devuelve True si se cumple
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS','True').lower() == 'true' #Devuelve True si se cumple
 EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_UPV = os.getenv('EMAIL_UPV')
