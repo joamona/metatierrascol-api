@@ -26,7 +26,7 @@ class MobileAppVersionViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, JSONRenderer)
     queryset = MobileAppVersionModel.objects.all()
     serializer_class = serializers.MobileAppVersionSerializer
-    permission_classes = [generalAccessPolicy.AllowAuthenticatedSafeMethodsAdminPostMethods]
+    permission_classes = [generalAccessPolicy.AllowAnySafeMethodsAdminPostMethods]
 
     def create(self, request, *args, **kwargs):
         # Serializa los datos recibidos en la solicitud       
@@ -36,16 +36,29 @@ class MobileAppVersionViewSet(viewsets.ModelViewSet):
         data['creado_por']=request.user.id
         tamaño=len(archivo.file.getvalue())/1000000
         print(f'Tamaño archivo: {tamaño}')
-        #archivo.filename=str('version_' + data['version']) + '.apk'
+        
         serializer = serializers.MobileAppVersionSerializer(data=data)
 
         if serializer.is_valid():
             ar=serializer.save()
             ar.url_descarga=settings.API_URL + 'mobileappversion/mobile_app_version/' + str(ar.id) + '/'
             ar.save()
+            new_path=str(settings.MEDIA_ROOT) + '/mobileappversion/' + str(ar.id) + '.apk'
+            os.rename(ar.archivo.path, new_path)
+            ar.archivo.name = str(ar.id) + '.apk'
+            ar.save()
             #if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
             #    avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
-            return Response({'mensaje': f'Versión guardada exitosamente ({tamaño} mb).'}, status=status.HTTP_201_CREATED)
+            return Response(
+                {
+                    'mensaje': f'Versión guardada exitosamente ({tamaño} mb). Número de versión {ar.id}', 
+                    'data':[{
+                        'id':ar.id, 
+                        'url_descarga':ar.url_descarga, 
+                        'publicar':ar.publicar,'fecha':ar.fecha, 
+                        'creado_por':{'id':ar.creado_por.id, 'username':request.user.username}
+                    }]
+                }, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
