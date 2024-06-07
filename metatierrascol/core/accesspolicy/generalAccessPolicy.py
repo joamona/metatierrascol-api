@@ -9,6 +9,15 @@ class AllowAny(AccessPolicy):
         }
     ]
 
+class AllowAnySafeMethods(AccessPolicy):
+    statements = [
+        {
+            "action": ["<safe_methods>"],
+            "principal": "*",
+            "effect": "allow"
+        }
+    ]
+
 class AllowAuthenticatedSafeMethodsAdminPostMethods(AccessPolicy):
     statements = [
         {
@@ -17,7 +26,7 @@ class AllowAuthenticatedSafeMethodsAdminPostMethods(AccessPolicy):
             "effect": "allow"
         },
         {
-            "action": ["<method:post>"],
+            "action": ["*"],
             "principal": ["group:admin"],
             "effect": "allow"
         },
@@ -32,7 +41,7 @@ class AllowAnySafeMethodsAdminPostMethods(AccessPolicy):
             "effect": "allow"
         },
         {
-            "action": ["<method:post>"],
+            "action": ["*"],
             "principal": ["group:admin"],
             "effect": "allow"
         },
@@ -42,7 +51,7 @@ class AllowAnySafeMethodsAdminPostMethods(AccessPolicy):
 class Allow_AuthenticatedSafeMethodsAndPostMethods(AccessPolicy):
     statements = [
         {
-            "action": ["<safe_methods>","<method:post>"],
+            "action": ["*"],
             "principal": "authenticated",
             "effect": "allow"
         },

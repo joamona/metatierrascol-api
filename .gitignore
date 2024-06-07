@@ -63,7 +63,6 @@ celerybeat-schedule.*
 *.sage.py 
 
 # Environments 
-.env 
 .venv 
 env/ 
 venv/ 
@@ -92,3 +91,10 @@ metatierrascol/media_root/*
 postgis-data
 pgadmin4
 geoserver
+
+migrations/*
+**/migrations/*
+
+# Exceptuar los archivos __init__.py
+!migrations/__init__.py
+!**/migrations/__init__.py

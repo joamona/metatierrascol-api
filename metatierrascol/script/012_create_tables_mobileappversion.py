@@ -20,7 +20,7 @@ oc.cursor.execute('CREATE SCHEMA IF NOT EXISTS mobileappversion')
 
 #creación de tablas
 print('create table mobileappversion.mobileappversion')
-oc.cursor.execute('CREATE TABLE IF NOT EXISTS mobileappversion.mobileappversion (id serial primary key, archivo varchar not null unique, publicar boolean not null default false, fecha timestamp not null default now(), creado_por_id integer not null, url_descarga varchar)')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS mobileappversion.mobileappversion (id serial primary key, version double precision not null unique, archivo varchar not null unique, publicar boolean not null default false, fecha timestamp not null default now(), creado_por_id integer not null, url_descarga varchar)')
 print('create table mobileappversion.mobileappversionnotes')
 oc.cursor.execute('CREATE TABLE IF NOT EXISTS mobileappversion.mobileappversionnotes (id serial primary key, mobileappversion_id integer not null, fecha timestamp not null  default now(), nota varchar not null, creado_por_id integer not null)')
 

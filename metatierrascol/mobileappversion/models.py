@@ -3,8 +3,7 @@ from django.contrib.auth import get_user_model
 
 class MobileAppVersion(models.Model):
     id = models.AutoField(primary_key=True)
-    #version = models.FloatField()#La versión va a ser automática con el id
-            #así la url de descarga coincide con el id
+    version = models.FloatField(unique=True)
     archivo = models.FileField(upload_to='mobileappversion')
     publicar = models.BooleanField(default=False)#valor por defecto
     fecha = models.DateTimeField(auto_now=True)
