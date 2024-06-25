@@ -24,7 +24,7 @@ class MobileAppVersionViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, JSONRenderer)
     queryset = MobileAppVersionModel.objects.all().order_by('version')
     serializer_class = serializers.MobileAppVersionSerializer
-    permission_classes = [generalAccessPolicy.AllowAnySafeMethodsAdminPostMethods, generalAccessPolicy.AllowAny]
+    permission_classes = [generalAccessPolicy.AllowAnySafeMethodsAdminPostMethods]
 
     def create(self, request, *args, **kwargs):
         """
