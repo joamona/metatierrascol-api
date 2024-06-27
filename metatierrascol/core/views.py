@@ -37,7 +37,7 @@ def isValidToken(request):
         knoxAuth = TokenAuthentication()
         user, auth_token = knoxAuth.authenticate_credentials(token)
         groups = managePermissions.getUserGroups_fromUsername(user.username)
-        return Response({"detail": "Valid token.", "username": user.username,
+        return Response({"detail": "Token Válido.", "username": user.username,
                     "groups":groups})
     else: 
         return Response({'error':'Token no encontrado'}, status=status.HTTP_400_BAD_REQUEST)
@@ -77,6 +77,9 @@ class LoginViewWithKnox(KnoxLoginView):
         v=response.data #the response with the authentication token
         groups = managePermissions.getUserGroups_fromUsername(request.data['username'])
         v['groups'] = groups #la lista de grupos a los que pertenece el usuario
+        v['username'] = request.data['username']
+        os=generalModule.getOpenedKnoxSessions(request.data['username'])
+        v['opened_sessions']= os
         return Response(v, status=status.HTTP_200_OK)
 
 class AppSettingsViewSet(viewsets.ModelViewSet):

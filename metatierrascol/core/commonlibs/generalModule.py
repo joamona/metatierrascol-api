@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.db import connection
 
 from pgOperations import pgOperations as pg
+from pgOperations.pgOperations import WhereClause
 
 from metatierrascol import settings
 
@@ -165,3 +166,16 @@ def get_all_logged_in_users():
     for u in l:
         lf.append(u.username)
     print(lf)
+
+def getOpenedKnoxSessions(username):
+    pgo=getDjangoPg()
+    wc=WhereClause('username=%s',[username])
+    r=pgo.pgSelect('public.auth_user','id',wc)
+    userId=r[0]['id']
+    wc = WhereClause('user_id=%s',[userId])
+    r=pgo.pgSelect('public.knox_authtoken','count(user_id)',wc,False)
+    if len(r)>0:
+        os=r[0][0]#user oppened session number
+    else:
+        os=0
+    return os
