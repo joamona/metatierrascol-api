@@ -14,10 +14,12 @@ from pathlib import Path
 from datetime import timedelta
 
 FORCE_SCRIPT_NAME=os.getenv('FORCE_SCRIPT_NAME')
-API_URL=os.getenv('API_URL')#El dominio y alias de acceso a la API, con BARRA FINAL. 
-                #Ej https://mydomain.com/metatierrascol-api/
 
+API_URL=os.getenv('API_URL')#El dominio y alias de acceso a la API, con BARRA FINAL. 
+                            #Ej https://mydomain.com/metatierrascol-api/
 WEB_URL=os.getenv('WEB_URL')#La dirección a la web. Se usa en los emails
+TEMPLATE_ASSETS_URL=os.getenv('TEMPLATE_ASSETS_URL')#dirección de los archivos
+                                    #estáticos usados en las plantillas
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

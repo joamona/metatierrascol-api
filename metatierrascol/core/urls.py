@@ -8,7 +8,7 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'appsettings',views.AppSettingsViewSet, 'appsettings')
 router.register(r'usuarios_avisados_descarga_zip',views.UsuariosAvisadosDescargaZipViewSet, 'usuarios_avisados_descarga_zip')
-router.register(r'user',views.UserViewSet,'app_user')
+router.register(r'user',views.UserViewSet,'user')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
@@ -21,5 +21,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('appsettings_list/<id>/',views.AppSettingsList.as_view({'get': 'retrieve'}), name='appsetings_list'),
     path('appsettings_list_query/',views.AppSettingsListQuery.as_view(), name='appsetings_list_query'), 
-    path('create_captcha/', views.createCaptcha,name='create_captcha')
+    path('create_captcha/', views.createCaptcha,name='create_captcha'),
+    path('email_confirm_token/', views.emailConfirmToken,name='email_confirm_token')
 ]

@@ -1,9 +1,10 @@
 # Create your views here.
 #Django imports
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.template.loader import get_template
+
 
 #rest framework imports
 from rest_framework import viewsets, permissions, generics
@@ -15,7 +16,7 @@ from rest_framework.decorators import api_view, permission_classes, action
 from knox.views import LoginView as KnoxLoginView
 from knox.auth import TokenAuthentication
 
-from pgOperations.pgOperations import FieldsAndValues
+from pgOperations.pgOperations import FieldsAndValues, WhereClause
 
 #mis módulos
 from . import serializers, models
@@ -173,6 +174,11 @@ class UserViewSet(viewsets.ModelViewSet):
             #print('account_activation_token', email_confirm_token)
             emails.emailNewUserEmailConfirm(user.id, user.username, email_confirm_token)
             print('email enviado')
+
+            if generalModule.getSetting('enviar_email_cuando_un_usuario_se_registre')=="True":
+                recipients = generalModule.getAllUserEmailsInGroup('receptor_email_nuevos_usuarios')
+                emails.alertUserJustregistered(user.id,user.username,recipients)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -198,17 +204,43 @@ def emailConfirmToken(request):
     """
     Sets the email as confirmed in the core.app_user table
     """
+    
     pg=generalModule.getDjangoPg()
-    username=request.GET['username']
     user_id=request.GET['id']
     email_confirm_token= request.GET["email_confirm_token"]
-
-    result=pg.pgSelect(table_name="core.app_user", string_fields_to_select="email_confirm_token",cond_where='user_id =%s and email_confirm_token=%s',list_val_cond_where=[user_id, email_confirm_token])
+    whereClause=WhereClause('user_id =%s and email_confirm_token=%s',[user_id, email_confirm_token])
+    result=pg.pgSelect(table_name="core.app_user", string_fields_to_select="email_confirm_token,email_confirmed",whereClause=whereClause)
     if len(result) != 1:       
         t=get_template(template_name='emailUserConfirm_wrong_token.html')
-        return t.render({'PHOTOMEDAS_ASSETS_URL': '', 'URL_WEB':settings.URL_WEB})
+        return HttpResponse(t.render({'TEMPLATE_ASSETS_URL': settings.TEMPLATE_ASSETS_URL, 'WEB_URL':settings.WEB_URL}))
     else:
-        o=FieldsAndValues(d={"email_confirmed":True})
-        pg.pgUpdate(table_name='core.app_user', oStrFielsAndValues=o, cond_where='user_id=%s', list_values_cond_where=[user_id])
+        if result[0]['email_confirmed']:
+            #el email ya había sido confirmado
+            t=get_template(template_name='emailUserAlreadyConfirmed.html')
+            return HttpResponse(t.render({'TEMPLATE_ASSETS_URL': settings.TEMPLATE_ASSETS_URL, 'WEB_URL':settings.WEB_URL}))         
+        
+        fieldsAndValues=FieldsAndValues({'email_confirmed':True})
+        whereClause=WhereClause('user_id =%s and email_confirm_token=%s',[user_id, email_confirm_token])
+        pg.pgUpdate(table_name='core.app_user', fieldsAndValues=fieldsAndValues, whereClause=whereClause)
+        #pg.pgUpdate(table_name='core.app_user', oStrFielsAndValues=o, cond_where='user_id=%s', list_values_cond_where=[user_id])
         t=get_template(template_name='emailUserConfirm.html')            
-        return t.render({'PHOTOMEDAS_ASSETS_URL': 'hhh', 'URL_WEB':settings.WEB_URL})
+
+        u=User.objects.get(id=user_id)
+        if generalModule.getSetting('auto_activar_usuario_cuando_confirme_email')=="True":
+            u.is_active=True
+            u.save()
+            print('usuario activado')
+            mensaje=f'Su cuenta ya está activada. Puede iniciar sesión en {settings.WEB_URL}.'
+        else:
+            mensaje=f'Ahora debe esperar a que un miembro del equipo active su cuenta en {settings.WEB_URL}.'
+
+        if generalModule.getSetting('enviar_email_cuando_un_usuario_confirma_su_email')=="True":
+            recipients = generalModule.getAllUserEmailsInGroup('receptor_email_usuario_confirma_email')
+            print(recipients)
+            emails.alertUserConfirmedEmail(user_id,u.username,recipients)
+
+        return HttpResponse(t.render({'TEMPLATE_ASSETS_URL': settings.TEMPLATE_ASSETS_URL, 'MENSAJE':mensaje}))
+
+
+
+

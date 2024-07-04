@@ -1,9 +1,10 @@
 from django.core.mail import send_mail
 from metatierrascol import settings
+from . import generalModule
 
 def emailNewUserEmailConfirm(user_id, username, email_confirm_token):
 
-    url_confirm = settings.API_URL + 'email_confirm_token/?id=' + user_id + "&account_activation_token=" + email_confirm_token    
+    url_confirm = settings.API_URL + 'core/email_confirm_token/?id=' + str(user_id) + "&email_confirm_token=" + email_confirm_token    
     subject = 'MetaTierras Colombia. Confirmación de email'
     message = f"""Querido usuario,
     
@@ -50,3 +51,52 @@ El equipo de MetaTierras Colombia.
     recipient_list = [username]
     send_mail(subject, message, email_from, recipient_list)
 
+
+
+def alertUserConfirmedEmail(user_id, username, recipient_list):
+
+    url_estatus = settings.API_URL + '/admin/auth/user/' + str(user_id) + '/'
+    subject = 'MetaTierras Colombia. Un usuario confirmó su email'
+
+    if generalModule.getSetting('auto_activar_usuario_cuando_confirme_email')=="True":
+        message = f"""Querido usuario,
+    
+Le avisamos de que el usuario {username} acaba de confirmar su email.
+Su cuenta ha sido automáticamente activada.
+Puede revisar su estatus en {url_estatus}.
+
+--
+Saludos,
+El equipo de MetaTierras Colombia.
+{settings.WEB_URL}
+"""
+    else:
+        message = f"""Querido usuario,
+    
+Le avisamos de que el usuario {username} acaba de confirmar su email.
+Puede revisar su estatus en {url_estatus}.
+
+--
+Saludos,
+El equipo de MetaTierras Colombia.
+{settings.WEB_URL}
+"""
+    email_from = settings.EMAIL_UPV
+    send_mail( subject, message, email_from, recipient_list )
+
+def alertUserJustregistered(user_id, username, recipient_list):
+
+    url_estatus = settings.API_URL + '/admin/auth/user/' + str(user_id) + '/'
+    subject = 'MetaTierras Colombia. Un usuario se acaba de registrar'
+    message = f"""Querido usuario,
+    
+Le avisamos de que el usuario {username} acaba registrarse.
+Puede revisar su estatus en {url_estatus}.
+
+--
+Saludos,
+El equipo de MetaTierras Colombia.
+{settings.WEB_URL}
+"""
+    email_from = settings.EMAIL_UPV
+    send_mail( subject, message, email_from, recipient_list )

@@ -28,7 +28,7 @@ def getSettingsFunction(request):
 
 def getSetting(parameterName):
     pgo=getDjangoPg()
-    cond_where =pg.WhereClause(where_clause="parameter_name=%s",where_values_list=[parameterName])
+    cond_where = WhereClause(where_clause="parameter_name=%s",where_values_list=[parameterName])
     r=pgo.pgSelect(table_name="core.appsettings", string_fields_to_select="parameter_value",whereClause=cond_where)
     return r[0]["parameter_value"]        
 
@@ -179,3 +179,14 @@ def getOpenedKnoxSessions(username):
     else:
         os=0
     return os
+
+def getAllUsersInGroup(groupName:str):
+    return list(User.objects.filter(groups__name=groupName))
+
+def getAllUserEmailsInGroup(groupName:str):
+    l=getAllUsersInGroup(groupName)
+    le=[]
+    for u in l:
+        le.append(u.email)
+    return le
+
