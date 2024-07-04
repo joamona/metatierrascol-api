@@ -1,0 +1,55 @@
+Mejoras:
+
+Dos número de tel de contacto
+Número catastral
+Posición gps escrita por los usuarios
+Provincia. Ponerlo como región y opcional
+--------
+Poner el nombre de usuario en el header. Poner el tipo de usuario en el header-> usuario@usuario.com geupoUsuario
+
+
+operación /core/is_valid_token/ añadida/. Tipo GET
+
+Posibles respuestas:
+	- Si no va bien, el estatus siempre es 401 unautorized
+	- Si no se pasa token en el header:
+		{"detail": "Authentication credentials were not provided."}
+	-Si el token está vacío (se pasa Authorization en el header, pero el valor está vacío):
+		{"detail":"Authentication credentials were not provided."}
+	- Si se Si se pasa Authorizatio, y en el token pone Token, pero no hay token:
+		{"detail":"Invalid token header. No credentials provided."}
+	- Si se pasa token en el header, pero es inválido:
+		{"detail":"Invalid token."}
+	- Si se pasa token y es válido:
+		{"detail":"Valid token.","username":"admin","groups":["admin"]}
+		
+En avanzadas, poner dos botones:
+	- Si no va bien, el estatus siempre es 401 unautorized
+	- Comprobar autenticación almacenada --> /core/is_valid_token/
+	- Cerrar sesión --/core/knox/logout/.
+		- Si pasas token válido -> Ok. Pero no responde con json. El estatus de la respuesta es 204 No content.
+		- Si no pasas el token:
+			{"detail":"Authentication credentials were not provided."}
+		- Si pasas un token vacío:
+			{"detail":"Authentication credentials were not provided."}
+		- Si pasas un token no válido, o caducado:
+			{"detail":"Invalid token."}
+
+
+Respuesta al hacer login ok:
+	- {"expiry":"2024-02-03T16:15:33.046090+01:00","token":"d823040035440ad043b7316fc6c6e7c37c01338d38d2c5faef21c954553c9423","groups":["admin"]}
+		STATUS 200
+	- Mal --> {
+    			"non_field_errors": [
+        		"Usuario o contraseña erróneos."
+   			 ]
+		}
+		status 400 bad request
+		
+Poner un botón en el header para ir a un nuevo componente que sea el centro de mensajes, y reportar aí mensajes de la app, y respuestas del servidor.
+	app: mens
+	servidor: resp	
+	
+
+	
+			

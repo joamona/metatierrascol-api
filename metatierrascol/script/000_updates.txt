@@ -1,0 +1,28 @@
+La X indica que está hecho.
+
+- Hasta el script 011 hecho en:
+    * Desarrollo: X
+    * Producción: X
+
+inif_db.sh para ejecutará todos los scripts, desde el primero al último.
+Es para iniciar una bbdd desde cero.
+
+En el servidor upvusig, y fff se han ejecutado los scripts hasta el 11.
+Para conservar los datos de la bbdd, 
+si hay que cambiar tablas, añadir tablas, o editar algo, 
+se edita, no se borra y luego se crea, con scripts mayores del 011.
+
+Para ejecutar scripts por separado:
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/012_create_tables_mobileappversion.py"
+-------
+Ejecutar los siguientes scripts:
+
+#añadir la gestión de versiones de la app
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/012_create_tables_mobileappversion.py"
+
+#añadir las tablas de la nueva app instalada captcha
+python manage.py migrate
+
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/014_create_tables_app_user.py"
+
+
