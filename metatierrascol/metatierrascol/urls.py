@@ -47,7 +47,18 @@ urlpatterns = [
     path('source/', include('source.urls')),    
     path('mobileappversion/', include('mobileappversion.urls')),   
     path('captcha/', include('captcha.urls')), 
+    path("accounts/", include("django.contrib.auth.urls")),
 ]
+#django.contrib.auth.urls includes the following urls
+#accounts/login/ [name='login']
+#accounts/logout/ [name='logout']
+#accounts/password_change/ [name='password_change']
+#accounts/password_change/done/ [name='password_change_done']
+#accounts/password_reset/ [name='password_reset']
+#accounts/password_reset/done/ [name='password_reset_done']
+#accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm']
+#accounts/reset/done/ [name='password_reset_complete']
+
 
 #A JSON view of your API specification at /swagger.json
 #A YAML view of your API specification at /swagger.yaml

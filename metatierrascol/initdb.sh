@@ -15,7 +15,9 @@ python manage.py shell < script/009_init_estado_expediente_predio.py
 python manage.py shell < script/010_init_appsettings.py
 python manage.py shell < script/011_init_usuarios_avisados_descarga_zip.py
 python manage.py shell < script/012_create_tables_mobileappversion.py
-python manage.py shell < 013_create_table_app_user.py
+python manage.py shell < script/013_create_table_app_user.py
+python manage.py shell < script/014_create_groups_emails.py
+python manage.py shell < script/015_create_email_settings.py
 
 
 
