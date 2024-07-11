@@ -53,7 +53,7 @@ class MobileAppVersionViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'ok':True,
-                    'mensaje': f'Versión guardada exitosamente ({tamaño} mb). Número de versión {ar.version}', 
+                    'message': f'Versión guardada exitosamente ({tamaño} mb). Número de versión {ar.version}', 
                     'data':[{
                         'id':ar.id, 
                         'version':ar.version,
