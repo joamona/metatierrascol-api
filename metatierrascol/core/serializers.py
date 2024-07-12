@@ -58,7 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id','username','email','is_superuser','is_active', 'password']
-
+        ref_name = 'UserSerializer'
     def validate_email(self,value):
         email = value
         if len(email) < 4:

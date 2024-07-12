@@ -65,7 +65,7 @@ class MobileAppVersionViewSet(viewsets.ModelViewSet):
                     'error':[]
                 }, status=status.HTTP_201_CREATED)
         else:
-            return Response({'ok':False, 'message':'No se pudo cargar el archivo','data':[],'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     #Si comento la línea @action ... no aparece en swagger dos veces. 
     #Esto lo añade una vez, si no lo comento:
