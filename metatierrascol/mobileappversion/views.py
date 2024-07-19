@@ -1,6 +1,7 @@
 import os
 
 from django.db.models import Max
+from django.http import FileResponse
 
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
@@ -11,14 +12,17 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.renderers import JSONRenderer
 
+from pgOperations.pgOperations import WhereClause, FieldsAndValues
+
 from core.accesspolicy import generalAccessPolicy
+from core.commonlibs import generalModule
 from metatierrascol import settings
 from . import serializers
 from .models import MobileAppVersion as MobileAppVersionModel, MobileAppVersionNotes as MobileAppVersionNotesModel
 
 #necesaro para descargar archivos
 from core.commonlibs import fileRenderer 
-from django.http import FileResponse
+
 
 class MobileAppVersionViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, JSONRenderer)
@@ -60,7 +64,7 @@ class MobileAppVersionViewSet(viewsets.ModelViewSet):
                         'url_descarga':ar.url_descarga, 
                         'filename':ar.archivo.name,
                         'publicar':ar.publicar,'fecha':ar.fecha, 
-                        'creado_por':{'id':ar.creado_por.id, 'username':request.user.username}
+                        'creado_por':ar.creado_por.id
                     }],
                     'error':[]
                 }, status=status.HTTP_201_CREATED)
@@ -99,26 +103,46 @@ class MobileAppVersionViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message':f'La versión {version} no existe'})
         
+
+    def publicar_version(self, request, version_id=None):
+        pgo = generalModule.getDjangoPg()
+        whereClause = WhereClause('id=%s',[version_id])
+        fieldsAndValues=FieldsAndValues({'publicar':True})
+        n=pgo.pgUpdate('mobileappversion.mobileappversion',fieldsAndValues,whereClause)
+        if n==1:
+            return Response({'ok':[f'Numero de versiones publicadas {n}']})
+        else:
+            return Response({'error':[f'Numero de versiones publicadas {n}']},status=status.HTTP_400_BAD_REQUEST)
+            
+    def despublicar_version(self, request, version_id=None):
+        pgo = generalModule.getDjangoPg()
+        whereClause = WhereClause('id=%s',[version_id])
+        fieldsAndValues=FieldsAndValues({'publicar':False})
+        n=pgo.pgUpdate('mobileappversion.mobileappversion',fieldsAndValues,whereClause)
+        if n==1:
+            return Response({'ok':[f'Numero de versiones despublicadas {n}']})
+        else:
+            return Response({'error':[f'Numero de versiones despublicadas {n}']},status=status.HTTP_400_BAD_REQUEST)
+      
+
     @action(detail=False, methods=['get'])
     def get_last_version_details(self, request):
         """
         Gets the latest version details
         """
-        max_version = MobileAppVersionModel.objects.aggregate(Max('version'))['version__max']
-        if max_version is not None:
-            qs=self.queryset.filter(version=max_version)#cojo el queryset 
-                                #de la variable de clase y le aplico otro filtro
-            l=(list(qs))
-            if len(l)>0:
-                s=self.serializer_class(l[0])
-                return Response({"ok":True, "message":"Datos última versión recuperada correctamente","data":[s.data]})
-            else:
-                return Response({'ok': False,'message':'No hay versiones de la app todavía', 'data':[]})    
-
-        return Response({'ok': False,'message':'No hay versiones de la app todavía', 'data':[]})       
+        whereClause = WhereClause('publicar = %s',[True])
+        pgo =generalModule.getDjangoPg()
+        r=pgo.pgSelect('mobileappversion.mobileappversion',"max(version) as max_version", whereClause=whereClause)
+        if r[0]['max_version'] is None:
+            return Response({'error': ['No hay versiones activadas de la app todavía']})   
+        else:
+            whereClause = WhereClause('version = %s',[r[0]['max_version']])
+            r=pgo.pgSelect('mobileappversion.mobileappversion','*',whereClause=whereClause)
+            r1=generalModule.remove_id_fromDictKeys(r[0])
+            return Response(r1)
 
 class MobileAppVersionNotesViewSet(viewsets.ModelViewSet):
-    parser_classes = (MultiPartParser, JSONRenderer)
+    #parser_classes = (MultiPartParser, JSONRenderer)
     queryset = MobileAppVersionNotesModel.objects.all()
     serializer_class = serializers.MobileAppVersionNotesSerializer
     permission_classes = [generalAccessPolicy.AllowAnySafeMethodsAdminPostMethods]
@@ -130,7 +154,9 @@ class MobileAppVersionNotesViewSet(viewsets.ModelViewSet):
         """
         # Serializa los datos recibidos en la solicitud       
         data=request.data.copy()#hago esto porque request.data es inmutable en la versión 4.2.7 de django
+        
         data['creado_por']=request.user.id
+        print("----notes------")
         print(data)
         serializer=self.serializer_class(data=data)
 
@@ -152,4 +178,4 @@ class MobileAppVersionNotesViewSet(viewsets.ModelViewSet):
             s=self.serializer_class(l,many=True)
             return Response(s.data)
         else:
-            return Response({'message':f'La versión id: {version_id} no tiene comentarios'})
+            return Response({'error':[f'La versión id: {version_id} no tiene comentarios']},status=status.HTTP_400_BAD_REQUEST)

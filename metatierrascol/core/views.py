@@ -175,7 +175,7 @@ class UserViewSet(viewsets.ModelViewSet):
             emails.emailNewUserEmailConfirm(user.id, user.username, email_confirm_token)
             print('email enviado')
 
-            if generalModule.getSetting('enviar_email_cuando_un_usuario_se_registre')=="True":
+            if generalModule.getSetting('enviar_email_cuando_un_usuario_se_registre').lower()=="true":
                 recipients = generalModule.getAllUserEmailsInGroup('receptor_email_nuevos_usuarios')
                 emails.alertUserJustregistered(user.id,user.username,recipients)
 

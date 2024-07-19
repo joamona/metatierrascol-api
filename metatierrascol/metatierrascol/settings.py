@@ -38,7 +38,7 @@ DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't')
 ALLOWED_HOSTS = [os.getenv('DJANGO_ALLOWED_HOSTS')]
 CSRF_TRUSTED_ORIGINS=['https://metatierrascol.upvusig.car.upv.es']
 
-DJANGO_SEND_EMAIL_ON_FILE_UPLOAD=os.getenv('DJANGO_SEND_EMAIL_ON_FILE_UPLOAD','True').lower() in ('true', '1', 't')
+#DJANGO_SEND_EMAIL_ON_FILE_UPLOAD=os.getenv('DJANGO_SEND_EMAIL_ON_FILE_UPLOAD','True').lower() in ('true', '1', 't')
 FILE_UPLOAD_MAX_MEMORY_SIZE = float(os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE','204857600'))
 # Application definition
 
@@ -207,7 +207,10 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_UPV = os.getenv('EMAIL_UPV')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_FROM = os.getenv('EMAIL_FROM')
-ADMINS=[('Gaspar Mora', 'joamona@cgf.upv.es'),('Diego Terevinto','diegoterevinto@gmail.com' )]
+ADMINS=[('Gaspar Mora', 'joamona@cgf.upv.es')]
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+#EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+#EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+
+#para habilitar los signals
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"

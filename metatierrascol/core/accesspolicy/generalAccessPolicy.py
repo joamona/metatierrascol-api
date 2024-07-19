@@ -1,6 +1,5 @@
 from rest_access_policy import AccessPolicy
 
-from rest_access_policy import AccessPolicy
 """
     A viewset that provides default `create()`, `retrieve()`, `update()`,
     `partial_update()`, `destroy()` and `list()` actions.

@@ -82,7 +82,7 @@ def getUserCountry(username):
         return None
     return r[0].get('country_name', None)    
 
-def getCodelistFunction(request,codelist,pg):
+def getCodelistFunction(codelist,pg):
     table_name="codelist." + codelist
     column_name=codelist
     r=getAllValuesInColumnFunction(table_name,column_name,pg)
@@ -132,20 +132,7 @@ def getPostFormData(request: HttpRequest):
     if settings.DEBUG:
         #logger.debug('Here is the post data:\n %s', json.dumps(d, indent=4, sort_keys=True))  
         pass
-    return d
-
-def emailNewUser(username):
-    #username = 'newusersoilcolour@gmail.com'
-    subject = 'New user registered in the Photomedas portal'
-    message = """The new user {0} has just registered. 
-Cheers
-""".format(username)
-    #email_from = settings.EMAIL_HOST_USER
-    email_from = settings.EMAIL_UPV
-    recipient_list = ['photomedas@upv.es']
-    send_mail( subject, message, email_from, recipient_list )
-    #return JsonResponse({"message":"Email sent to {0}".format(recipient_list[0]),"ok":"true","data":""})
-    
+    return d    
 
 def get_all_logged_in_users():
     # Query all non-expired sessions
@@ -180,6 +167,13 @@ def getOpenedKnoxSessions(username):
         os=0
     return os
 
+def getUserEmailFromUsername(username):
+    u=list(User.objects.filter(username=username))
+    if len(u)>0:
+        return u[0].email
+    else:
+        return ''
+
 def getAllUsersInGroup(groupName:str):
     return list(User.objects.filter(groups__name=groupName))
 
@@ -189,4 +183,27 @@ def getAllUserEmailsInGroup(groupName:str):
     for u in l:
         le.append(u.email)
     return le
+
+def remove_id_fromDictKeys(d:dict)->dict:
+    """
+    Removes the last _id from the dictionary key names
+    This is for use with pgOperations because, not as DRF,
+    it returns the complete field values in the foreign field names
+        DRF return 
+            username
+    but 
+        pgOperations returns
+            username_id
+    Calling this function both methods are compatible
+    """
+    r={}
+    for key,value in d.items():
+        if key[-3:]=='_id':
+            key2=key[:-3]
+            r[key2]=value
+        else:
+            r[key]=value
+    return r
+
+        
 

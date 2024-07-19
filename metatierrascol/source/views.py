@@ -21,6 +21,7 @@ from baunit.serializers import BaunitSerializer
 from core.commonlibs import generalModule
 from core.accesspolicy import generalAccessPolicy
 from core.commonlibs import fileRenderer #necesaro para descargar archivos
+from core.commonlibs import emails
 
 #ESTO FUNCIONABA, PERO YA NO SE USA. AHORA USO UNA VISTA MODELVIEWSET
 #las vistas de clase normales también requieren el token
@@ -66,7 +67,7 @@ class ArchivoZip(viewsets.ModelViewSet):
         #print(request.FILES)
         archivo = request.FILES['archivo']
         tamaño=len(archivo.file.getvalue())/1000000
-        print(f'Tamaño archivo: {tamaño}')
+        #print(f'Tamaño archivo: {tamaño}')
         archivo.filename=str(baunit.id) + '.zip'
         data['archivo']=archivo
         data['baunit']=baunit.id
@@ -82,8 +83,13 @@ class ArchivoZip(viewsets.ModelViewSet):
                 mensaje = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
             else:
                 mensaje = 'Por seguridad, el fichero NO será eliminado después de la primera descarga'
-            if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
-                avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
+            # Esta setting ha sido eliminada
+            # if settings.DJANGO_SEND_EMAIL_ON_FILE_UPLOAD:
+            #    avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
+
+            if generalModule.getSetting('enviar_email_cuando_un_usuario_sube_un_predio').lower()=="true":
+                emails.avisaZipDisponibleDescarga(str(baunit.codigo_acceso), request.user.username, tamaño,data)
+            
             return Response({'mensaje': f'Archivo y datos guardados exitosamente ({tamaño} mb). Los usuarios han sido avisados para la descarga. {mensaje}'}, status=status.HTTP_201_CREATED)
             # try:
             #     pass
@@ -138,54 +144,6 @@ class DescargaArchivoZipCodigoAcceso(views.APIView):
         else:
             return Response('{"Error":"Codigo no encontrado"}',content_type='application/json', status=status.HTTP_404_NOT_FOUND)
  
-def avisaZipDisponibleDescarga(codigo_acceso, username, tamaño, data):
-        pgo=generalModule.getDjangoPg()
-        wc=WhereClause(where_clause='u1.user_id=u2.id', where_values_list=[])
-        r=pgo.pgSelect(table_name='core.usuarios_avisados_descarga_zip as u1, auth_user as u2 ',string_fields_to_select='u2.id, u2.email', whereClause=wc)
-        destinatarios=[]
-        for row in r:
-            destinatarios.append(row['email'])
-        
-        enlace = settings.API_URL + 'source/descarga_zip_codigo_acceso/' + codigo_acceso + '/'
-        borrar=generalModule.getSetting('borrar_fichero_zip_al_descargar')
-        if borrar.lower() == 'true':
-            aviso = 'Por seguridad, el fichero SERÁ ELIMINADO después de la primera descarga'
-        else:
-            aviso = 'El fichero NO será eliminado después de la primera descarga'
-        
-        send_mail(
-            subject='Proyecto MetaTierras Colombia. Fichero de datos de campo disponible para la descarga',
-                  message=f"""Querido usuario,
-
-El usuario {username} acaba de subir un fichero con una medición.
-Puede descargar el fichero ({tamaño} mb) en el siguiente enlace:
-
-    {enlace}
-
-    {aviso}
-
-    Datos del predio:
-        Nombre: {data['nombre']}
-        Departamento: {data['departamento']}
-        Provincia: {data['provincia']}
-        Sector: {data['sector_predio']}
-        Numero predial: {data['numero_predial']}
-        Tipo: {data['tipo']}
-        Complemento: {data['complemento']}
-
-Saludos cordiales,
-El equipo de MetaTierras Colombia, Universitat Politècnica de València, en colaboración con la Fundación Forjando Futuros.
-
-AVISO LEGAL: La información que se puede obtener con este mensaje es información personal de los 
-usuarios interesados en el expediente de regualrización de tierras. Usted se compromete a hacer un
-buen uso de dicha información, siempre en interés de los usuarios que aparecen en el expediente,
-eximiento al equipo de la Universitat Politècnica de València de cualquier responsabilidad, derivada
-del uso de dicha información.
-
-        """,
-            from_email='metatierras@upv.es',
-            recipient_list=destinatarios
-        )
 
 
 
