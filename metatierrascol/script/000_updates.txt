@@ -21,34 +21,48 @@ Ejecutar los siguientes scripts:
 
 #añadir la gestión de versiones de la app
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/012_create_tables_mobileappversion.py"
-    * Desarrollo: X
+    * Desarrollo casa: X
+    * Desarrollo portatil: X
+    * Desarrollo poli: 
     * Producción upvusig: 
     * Producción fff: 
 
 #añadir las tablas de la nueva app instalada 'captcha'.
 Reconstruir la imagen docker compose up --build
 python manage.py migrate
-    * Desarrollo: X
+    * Desarrollo casa: X
+    * Desarrollo portatil: X
+    * Desarrollo poli: 
     * Producción upvusig: 
     * Producción fff: 
 
 #Gestión de suarios de la app y la web
 #013_create_table_app_user.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/013_create_table_app_user.py"
-    * Desarrollo: X
+    * Desarrollo casa: X
+    * Desarrollo portatil: X
+    * Desarrollo poli: 
     * Producción upvusig: 
     * Producción fff: 
 
 #Creación de nuevos grupos para la gestión de usuarios. Y un grupo para forjando futuros
 #014_create_groups_emails.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/014_create_groups_emails.py"
-    * Desarrollo: X
+    * Desarrollo casa: X
+    * Desarrollo portatil: X
+    * Desarrollo poli: 
     * Producción upvusig: 
     * Producción fff: 
 
 #Creación nuevas settings para la gestión de nuevos usuarios
 #015_create_email_settings.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/015_create_email_settings.py"
-    * Desarrollo: X
+    * Desarrollo casa: X
+    * Desarrollo portatil: 
+    * Desarrollo poli: 
     * Producción upvusig: 
     * Producción fff: 
+
+#Creación más settings para la gestión de nuevos usuarios
+#016_create_email_settings_otros.py
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/016_create_email_settings_otros.py"
