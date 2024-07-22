@@ -68,8 +68,8 @@ print('create table core.acceso_municipio')
 oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.acceso_municipio (id serial primary key, user_id integer not null, municipio_id integer not null, unique(user_id, municipio_id))')
 
 #almacena los usuarios que reciben un email cuando se recibe un fichero
-print('create table core.usuarios_avisados_descarga_zip')
-oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.usuarios_avisados_descarga_zip (id serial primary key, user_id integer not null, unique(user_id))')
+#print('create table core.usuarios_avisados_descarga_zip')
+#oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.usuarios_avisados_descarga_zip (id serial primary key, user_id integer not null, unique(user_id))')
 
 #APP BAUNIT
 print('create table baunit.baunit')
@@ -123,7 +123,7 @@ oc.cursor.execute('ALTER TABLE baunit.baunit ADD CONSTRAINT fk_baunit_estado_exp
 #CORE
 oc.cursor.execute('ALTER TABLE core.acceso_municipio ADD CONSTRAINT fk_acceso_municipio_username FOREIGN KEY (user_id) REFERENCES auth_user(id) on delete no action on update cascade')
 oc.cursor.execute('ALTER TABLE core.acceso_municipio ADD CONSTRAINT fk_acceso_municipio_municipio FOREIGN KEY (municipio_id) REFERENCES codelist.municipio(id) on delete no action on update cascade')
-oc.cursor.execute('ALTER TABLE core.usuarios_avisados_descarga_zip ADD CONSTRAINT fk_usuarios_avisados_descarga_zip_username FOREIGN KEY (user_id) REFERENCES auth_user(id) on delete no action on update cascade')
+#oc.cursor.execute('ALTER TABLE core.usuarios_avisados_descarga_zip ADD CONSTRAINT fk_usuarios_avisados_descarga_zip_username FOREIGN KEY (user_id) REFERENCES auth_user(id) on delete no action on update cascade')
 
 #SOURCE
 oc.cursor.execute('ALTER TABLE source.archivo_zip ADD CONSTRAINT fk_source_archivo_zip_baunit FOREIGN KEY (baunit_id) REFERENCES baunit.baunit(id) on delete no action on update cascade')
