@@ -6,6 +6,7 @@ Created on 5 nov. 2020
 from django import forms
 from captcha.fields import CaptchaField
 from django.shortcuts import render
+from metatierrascol import settings
 
 class CreateCaptchaTestForm(forms.Form):
     """
@@ -31,8 +32,13 @@ required id="id_captcha_0" autocomplete="off"><input type="text" name="captcha_1
     
     if srcImgInitialPosition == 9 or srcImgFinalPosition == -1:
         raise Exception("Error in  getCaptchaFieldsFromHtmlForm. Error in getting srcImg")
-    srcImg=htmlForm[srcImgInitialPosition:srcImgFinalPosition]
+    srcImg:str=htmlForm[srcImgInitialPosition:srcImgFinalPosition]
+    FORCE_SCRIPT_NAME = settings.FORCE_SCRIPT_NAME
     
+    #remove the FORCE_SCRIPT_NAME from the src of the img
+    #as FORCE_SCRIPT_NAME is already set in the front-end
+    #eg: api/captcha/image/a1c0db75f908a8adc/  --> captcha/image/a1c0db75f908a8adc
+    srcImg = srcImg.replace(FORCE_SCRIPT_NAME,'')
     captcha_0_InitialPosition=htmlForm.find('name="captcha_0" value="') + 24
     captcha_0_FinalPosition=htmlForm.find('" required id="id_captcha_0"')
     
