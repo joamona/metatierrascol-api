@@ -46,10 +46,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = float(os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZ
 USE_X_FORWARDED_HOST=os.getenv('SECURE_PROXY_SSL_HEADER', 'False').lower() in ('true',1,'t')
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', os.getenv('SECURE_PROXY_SSL_HEADER'))
 
-if DEBUG:
-    SITE_ID=1
-else:
-    SITE_ID=2 #production site for password reset email
+SITE_ID=int(os.getenv('SITE_ID'),'2')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
