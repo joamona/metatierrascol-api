@@ -18,7 +18,7 @@ services:
     image: postgis/postgis:16-3.4
     restart: unless-stopped
     env_file:
-      - .env.prod
+      - .env.prod.upvusig
     ports:
       - 127.0.0.1:${POSTGRES_FORWARDED_PORT}:5432
     volumes:   
@@ -83,9 +83,9 @@ services:
       networks:
         - postgis
 
-#volumes:
-#  metatierrascol-data:
-#    driver: local
+volumes:
+  postgis-data:
+    driver: local
 
 networks:
    postgis:

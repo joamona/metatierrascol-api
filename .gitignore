@@ -93,6 +93,7 @@ metatierrascol/media_root/*
 
 postgis-data
 pgadmin4
+pgadmin4_prod
 geoserver
 
 migrations/*
