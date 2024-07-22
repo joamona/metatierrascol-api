@@ -21,6 +21,8 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.contrib.auth.decorators import login_required
 
+#from .views import CustomPasswordResetView
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Snippets API",
@@ -47,7 +49,9 @@ urlpatterns = [
     path('source/', include('source.urls')),    
     path('mobileappversion/', include('mobileappversion.urls')),   
     path('captcha/', include('captcha.urls')), 
+#    path('password_reset2/', CustomPasswordResetView.as_view(), name='password_reset2'),
     path("accounts/", include("django.contrib.auth.urls")),
+
 ]
 #django.contrib.auth.urls includes the following urls
 #accounts/login/ [name='login']
