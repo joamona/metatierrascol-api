@@ -71,3 +71,8 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
 #017_update_django_sites.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py migrate"
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/017_update_django_sites.py"
+    * Desarrollo casa: X
+    * Desarrollo portatil: 
+    * Desarrollo poli: 
+    * Producción upvusig: X
+    * Producción fff: 
