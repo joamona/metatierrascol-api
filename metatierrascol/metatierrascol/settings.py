@@ -42,6 +42,15 @@ CSRF_TRUSTED_ORIGINS=['https://metatierrascol.upvusig.car.upv.es']
 FILE_UPLOAD_MAX_MEMORY_SIZE = float(os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE','204857600'))
 # Application definition
 
+#For password reset site configuration
+USE_X_FORWARDED_HOST=os.getenv('SECURE_PROXY_SSL_HEADER', 'False').lower() in ('true',1,'t')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', os.getenv('SECURE_PROXY_SSL_HEADER'))
+
+if DEBUG:
+    SITE_ID=1
+else:
+    SITE_ID=2 #production site for password reset email
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'captcha',
     'drf_yasg',
     'rest_framework',
@@ -209,8 +219,9 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_FROM = os.getenv('EMAIL_FROM')
 ADMINS=[('Gaspar Mora', 'joamona@cgf.upv.es')]
 
-#EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-#EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 
 #para habilitar los signals
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+#os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"

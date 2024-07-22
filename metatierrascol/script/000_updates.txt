@@ -33,7 +33,7 @@ python manage.py migrate
     * Desarrollo casa: X
     * Desarrollo portatil: X
     * Desarrollo poli: 
-    * Producción upvusig: 
+    * Producción upvusig: X
     * Producción fff: 
 
 #Gestión de suarios de la app y la web
@@ -42,7 +42,7 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
     * Desarrollo casa: X
     * Desarrollo portatil: X
     * Desarrollo poli: 
-    * Producción upvusig: 
+    * Producción upvusig: X
     * Producción fff: 
 
 #Creación de nuevos grupos para la gestión de usuarios. Y un grupo para forjando futuros
@@ -51,7 +51,7 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
     * Desarrollo casa: X
     * Desarrollo portatil: X
     * Desarrollo poli: 
-    * Producción upvusig: 
+    * Producción upvusig: X
     * Producción fff: 
 
 #Creación nuevas settings para la gestión de nuevos usuarios
@@ -60,9 +60,14 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
     * Desarrollo casa: X
     * Desarrollo portatil: 
     * Desarrollo poli: 
-    * Producción upvusig: 
+    * Producción upvusig: X
     * Producción fff: 
 
 #Creación más settings para la gestión de nuevos usuarios
 #016_create_email_settings_otros.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/016_create_email_settings_otros.py"
+
+#Django sites for password reset
+#017_update_django_sites.py
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py migrate"
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/017_update_django_sites.py"

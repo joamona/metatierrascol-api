@@ -19,6 +19,7 @@ python manage.py shell < script/013_create_table_app_user.py
 python manage.py shell < script/014_create_groups_emails.py
 python manage.py shell < script/015_create_email_settings.py
 python manage.py shell < script/016_create_email_settings_otros.py
+python manage.py shell < script/017_update_django_sites.py
 
 
 
