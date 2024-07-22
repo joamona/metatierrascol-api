@@ -43,10 +43,11 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = float(os.getenv('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZ
 # Application definition
 
 #For password reset site configuration
-USE_X_FORWARDED_HOST=os.getenv('SECURE_PROXY_SSL_HEADER', 'False').lower() in ('true',1,'t')
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', os.getenv('SECURE_PROXY_SSL_HEADER'))
+#USE_X_FORWARDED_HOST=os.getenv('SECURE_PROXY_SSL_HEADER', 'False').lower() in ('true',1,'t')
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', os.getenv('SECURE_PROXY_SSL_HEADER'))
 
 #SITE_ID=os.getenv('SITE_ID', '1')
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
