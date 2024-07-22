@@ -7,8 +7,8 @@ class AppSettingsAdmin(admin.ModelAdmin):
 class AccesoMunicipioAdmin(admin.ModelAdmin):
     list_display = ('user', 'municipio')
 
-class UsuariosAvisadosDescargaZipAdmin(admin.ModelAdmin):
-    list_display = ('user',)
+#class UsuariosAvisadosDescargaZipAdmin(admin.ModelAdmin):
+#    list_display = ('user',)
 
 class AppUserAdmin(admin.ModelAdmin):
     list_display = ('id','user', 'data_acceptation', 'notification_acceptation', 'interest',
@@ -16,6 +16,6 @@ class AppUserAdmin(admin.ModelAdmin):
 
 admin.site.register(models.AppSettings, AppSettingsAdmin) 
 admin.site.register(models.AccesoMunicipio, AccesoMunicipioAdmin) 
-admin.site.register(models.UsuariosAvisadosDescargaZip, UsuariosAvisadosDescargaZipAdmin) 
+#admin.site.register(models.UsuariosAvisadosDescargaZip, UsuariosAvisadosDescargaZipAdmin) 
 admin.site.register(models.AppUser, AppUserAdmin) 
 

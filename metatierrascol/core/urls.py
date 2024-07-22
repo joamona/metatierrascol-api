@@ -7,7 +7,7 @@ from . import views
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'appsettings',views.AppSettingsViewSet, 'appsettings')
-router.register(r'usuarios_avisados_descarga_zip',views.UsuariosAvisadosDescargaZipViewSet, 'usuarios_avisados_descarga_zip')
+#router.register(r'usuarios_avisados_descarga_zip',views.UsuariosAvisadosDescargaZipViewSet, 'usuarios_avisados_descarga_zip')
 router.register(r'user',views.UserViewSet,'user')
 
 # Wire up our API using automatic URL routing.

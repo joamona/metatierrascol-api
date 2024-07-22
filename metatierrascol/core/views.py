@@ -124,10 +124,10 @@ class AppSettingsListQuery(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     filterset_fields = ['help_es', 'help_en']
 
-class UsuariosAvisadosDescargaZipViewSet(viewsets.ModelViewSet):
-    queryset = models.UsuariosAvisadosDescargaZip.objects.all()
-    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethodsAdminPostMethods,)
-    serializer_class = serializers.UsuariosAvisadosDescargaZipSerializer
+#class UsuariosAvisadosDescargaZipViewSet(viewsets.ModelViewSet):
+#    queryset = models.UsuariosAvisadosDescargaZip.objects.all()
+#    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethodsAdminPostMethods,)
+#    serializer_class = serializers.UsuariosAvisadosDescargaZipSerializer
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()

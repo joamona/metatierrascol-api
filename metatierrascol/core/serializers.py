@@ -48,10 +48,10 @@ class LoginViewWithKnoxSerializer(serializers.Serializer):
         return attrs
     
 
-class UsuariosAvisadosDescargaZipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.UsuariosAvisadosDescargaZip
-        fields = '__all__'
+#class UsuariosAvisadosDescargaZipSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = models.UsuariosAvisadosDescargaZip
+#        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):

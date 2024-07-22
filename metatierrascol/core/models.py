@@ -27,12 +27,12 @@ class AccesoMunicipio(models.Model):
         db_table = 'core"."acceso_municipio'
 
 
-class UsuariosAvisadosDescargaZip(models.Model):
-    id = models.AutoField(primary_key=True, editable=False)
-    user = models.ForeignKey(get_user_model(),  related_name='usuariosAvisadosDescargaZip_user_id', on_delete=models.DO_NOTHING)#no se borra el registro
-    class Meta:
-        managed = False
-        db_table = 'core"."usuarios_avisados_descarga_zip'
+#class UsuariosAvisadosDescargaZip(models.Model):
+#    id = models.AutoField(primary_key=True, editable=False)
+#    user = models.ForeignKey(get_user_model(),  related_name='usuariosAvisadosDescargaZip_user_id', on_delete=models.DO_NOTHING)#no se borra el registro
+#    class Meta:
+#        managed = False
+#        db_table = 'core"."usuarios_avisados_descarga_zip'
 
 
 class AppUser(models.Model):
