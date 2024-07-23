@@ -15,7 +15,7 @@ pgo.pgInsert(table_name='core.appsettings',fieldsAndValues=fa)
 
 fa=FieldsAndValues({
     'parameter_name':'enviar_email_cuando_un_usuario_se_registre',
-    'parameter_value': 'False',
+    'parameter_value': 'True',
     'help_en':'If True, sends an email to the users in the group receptor_email_nuevos_usuarios',
     'help_es': 'Si es True se envía un email a los usuarios del grupo receptor_email_nuevos_usuarios'})
 pgo.pgInsert(table_name='core.appsettings',fieldsAndValues=fa)

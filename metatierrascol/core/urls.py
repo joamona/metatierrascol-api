@@ -26,7 +26,7 @@ urlpatterns = [
 
     path ('request_password_reset_email/',resetPasswordViews.RequestPasswordReset.as_view(),name='request_password_reset_email'),
     path('send_reset_password_form/<token>/', resetPasswordViews.sendResetPasswordForm, name='send_reset_password_form'),
-    path('reset_password/<token>/', resetPasswordViews.ResetPassword.as_view(),name='reset_password')
+    path('perform_reset_password/<token>/', resetPasswordViews.PerformResetPassword.as_view(),name='perform_reset_password')
 ]
 #Explicación proceso reset password
     #path ('request_password_reset_email',resetPasswordViews.RequestPasswordReset.as_view(),'request_password_reset_email'),

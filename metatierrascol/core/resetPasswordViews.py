@@ -42,7 +42,7 @@ class RequestPasswordReset(generics.GenericAPIView):
         else:
             return Response({'success': ['Le hemos enviado un email para reestablecer la contraseña2']}, status=status.HTTP_200_OK)
 
-class ResetPassword(generics.GenericAPIView):
+class PerformResetPassword(generics.GenericAPIView):
     """
     Receives the token, and the new password twice:
         - cheks the token and gets the email
