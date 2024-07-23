@@ -67,7 +67,7 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
 #016_create_email_settings_otros.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/016_create_email_settings_otros.py"
 
-#Django sites for password reset
+#Django sites for password reset  <---ANULADO
 #017_update_django_sites.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py migrate"
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/017_update_django_sites.py"
@@ -76,3 +76,6 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
     * Desarrollo poli: 
     * Producción upvusig: X
     * Producción fff: 
+
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/018_create_table_passwordreset.py"
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py migrate"
