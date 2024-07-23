@@ -95,3 +95,4 @@ class AppUserSerializer(serializers.ModelSerializer):
         model = models.AppUser
         fields = ['id','user', 'data_acceptation', 'notification_acceptation', 'interest',
                     'email_confirm_token', 'email_confirmed']   
+

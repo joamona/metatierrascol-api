@@ -1,6 +1,6 @@
 #This script is to be able to set the site to properly render
 #the site name in the email of password reset
-
+"""
 import os
 
 API_URL = os.getenv('API_URL')
@@ -21,3 +21,4 @@ fieldsAndValues=FieldsAndValues({'domain':site, 'name':site})
 pgo.pgUpdate('public.django_site',fieldsAndValues)
 
 print(f"Sitio insertado")
+"""

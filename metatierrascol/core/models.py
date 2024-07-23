@@ -46,3 +46,11 @@ class AppUser(models.Model):
     class Meta:
         managed = False
         db_table = 'core"."app_user'
+
+class PasswordReset(models.Model):
+    email = models.EmailField()
+    token = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        managed = False
+        db_table = 'core"."passwordreset'

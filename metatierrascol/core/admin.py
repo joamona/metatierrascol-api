@@ -13,9 +13,13 @@ class AccesoMunicipioAdmin(admin.ModelAdmin):
 class AppUserAdmin(admin.ModelAdmin):
     list_display = ('id','user', 'data_acceptation', 'notification_acceptation', 'interest',
                     'email_confirm_token', 'email_confirmed')
+    
+class PasswordResetAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email','token', 'created_at')
 
 admin.site.register(models.AppSettings, AppSettingsAdmin) 
 admin.site.register(models.AccesoMunicipio, AccesoMunicipioAdmin) 
 #admin.site.register(models.UsuariosAvisadosDescargaZip, UsuariosAvisadosDescargaZipAdmin) 
 admin.site.register(models.AppUser, AppUserAdmin) 
+admin.site.register(models.PasswordReset, PasswordResetAdmin) 
 

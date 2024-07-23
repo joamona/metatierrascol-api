@@ -175,3 +175,22 @@ def myMassSendMail(subject, message, email_from, recipient_list):
             connection=connection,
         ).send()
     print('----Email enviado-----')
+
+
+def checkEmailToken(email,reset_url):
+
+    subject = 'MetaTierras Colombia. Restablecimiento de contraseña'
+    message = f"""Querido usuario,
+    
+Haga click en el siguiente link para poder reestablecer su contraseña:
+
+{reset_url}
+
+--
+Saludos,
+El equipo de MetaTierras Colombia.
+{settings.WEB_URL}
+"""
+    email_from = settings.EMAIL_UPV
+    recipient_list = [email]
+    send_mail( subject, message, email_from, recipient_list )
