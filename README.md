@@ -61,4 +61,4 @@ Para el desarrollo, puede que necesite reiniciar la base de datos, para añadir 
 
 - Vuelva al paso 3 de la instalación.
 
-
+Django==4.2.7

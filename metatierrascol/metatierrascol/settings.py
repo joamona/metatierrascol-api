@@ -202,8 +202,8 @@ SWAGGER_SETTINGS = {
 
 }
 
-#LOGIN_URL = 'rest_framework:login'
-#LOGOUT_URL = 'rest_framework:logout'
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
 
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
