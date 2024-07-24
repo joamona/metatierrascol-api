@@ -85,6 +85,7 @@ metatierrascol/static_root/*
 !metatierrascol/static_root/noMeBorres.txt
 metatierrascol/media_root/*
 !metatierrascol/media_root/noMeBorres.txt
+metatierrascol/sent_emails/*
 
 .env.prod
 .env.prod.upvusig

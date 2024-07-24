@@ -211,19 +211,19 @@ def emailConfirmToken(request):
     whereClause=WhereClause('user_id =%s and email_confirm_token=%s',[user_id, email_confirm_token])
     result=pg.pgSelect(table_name="core.app_user", string_fields_to_select="email_confirm_token,email_confirmed",whereClause=whereClause)
     if len(result) != 1:       
-        t=get_template(template_name='emailUserConfirm_wrong_token.html')
+        t=get_template(template_name='confirm_email/emailUserConfirm_wrong_token.html')
         return HttpResponse(t.render({'TEMPLATE_ASSETS_URL': settings.TEMPLATE_ASSETS_URL, 'WEB_URL':settings.WEB_URL}))
     else:
         if result[0]['email_confirmed']:
             #el email ya había sido confirmado
-            t=get_template(template_name='emailUserAlreadyConfirmed.html')
+            t=get_template(template_name='confirm_email/emailUserAlreadyConfirmed.html')
             return HttpResponse(t.render({'TEMPLATE_ASSETS_URL': settings.TEMPLATE_ASSETS_URL, 'WEB_URL':settings.WEB_URL}))         
         
         fieldsAndValues=FieldsAndValues({'email_confirmed':True})
         whereClause=WhereClause('user_id =%s and email_confirm_token=%s',[user_id, email_confirm_token])
         pg.pgUpdate(table_name='core.app_user', fieldsAndValues=fieldsAndValues, whereClause=whereClause)
         #pg.pgUpdate(table_name='core.app_user', oStrFielsAndValues=o, cond_where='user_id=%s', list_values_cond_where=[user_id])
-        t=get_template(template_name='emailUserConfirm.html')            
+        t=get_template(template_name='confirm_email/emailUserConfirm.html')            
 
         u=User.objects.get(id=user_id)
         if generalModule.getSetting('auto_activar_usuario_cuando_confirme_email')=="True":
