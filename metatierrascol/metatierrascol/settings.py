@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-#    'django.contrib.sites',
     'captcha',
     'drf_yasg',
     'rest_framework',
@@ -203,8 +202,8 @@ SWAGGER_SETTINGS = {
 
 }
 
-LOGIN_URL = 'rest_framework:login'
-LOGOUT_URL = 'rest_framework:logout'
+#LOGIN_URL = 'rest_framework:login'
+#LOGOUT_URL = 'rest_framework:logout'
 
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
