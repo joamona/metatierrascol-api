@@ -38,7 +38,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-#    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/", include("django.contrib.auth.urls")),
     path('admin/', admin.site.urls),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'), 
     path('swagger/', login_required(schema_view.with_ui('swagger', cache_timeout=0)), name='schema-swagger-ui'),
@@ -50,7 +50,6 @@ urlpatterns = [
     path('source/', include('source.urls')),    
     path('mobileappversion/', include('mobileappversion.urls')),   
     path('captcha/', include('captcha.urls')), 
-#    path('password_reset2/', CustomPasswordResetView.as_view(), name='password_reset2'),
 
 ]
 #django.contrib.auth.urls includes the following urls
