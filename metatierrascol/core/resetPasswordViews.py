@@ -9,7 +9,7 @@ from rest_framework import permissions
 from django.http import HttpResponse
 from django.template.loader import get_template
 
-from .models import PasswordReset
+from .models import CustomPasswordReset
 from metatierrascol.settings import API_URL, TEMPLATE_ASSETS_URL
 from .commonlibs import emails
 from .resetPasswordSerializers import ResetPasswordRequestSerializer, ResetPasswordSerializer
@@ -28,11 +28,11 @@ class RequestResetPasswordEmail(generics.GenericAPIView):
         user = User.objects.filter(email__iexact=email).first()
 
         if user:
-            if PasswordReset.objects.filter(email=email).exists():
+            if CustomPasswordReset.objects.filter(email=email).exists():
                 return Response({'success': ['Ya le enviamos un email para reestablecer la contraseña. Busque el email.']}, status=status.HTTP_200_OK)
             token_generator = PasswordResetTokenGenerator()
             token = token_generator.make_token(user) 
-            reset = PasswordReset(email=email, token=token)
+            reset = CustomPasswordReset(email=email, token=token)
             reset.save()
 
             reset_url = API_URL + f'core/send_reset_password_form/{token}/'
@@ -48,7 +48,7 @@ class RequestResetPasswordEmail(generics.GenericAPIView):
 @api_view(http_method_names=['GET'])
 @permission_classes((permissions.AllowAny,))
 def sendResetPasswordForm(request, token):
-    reset_obj = PasswordReset.objects.filter(token=token).first()  
+    reset_obj = CustomPasswordReset.objects.filter(token=token).first()  
     if not reset_obj:
         t=get_template(template_name='passwordreset/custom_password_reset_message.html')
         return HttpResponse(t.render({'message':'Token Inválido', 'TEMPLATE_ASSETS_URL':TEMPLATE_ASSETS_URL}))
@@ -78,7 +78,7 @@ class PerformResetPassword(generics.GenericAPIView):
         #    return Response({"error": ["Las contraseñas no coinciden"]}, status=400)
         
         t=get_template(template_name='passwordreset/custom_password_reset_message.html')
-        reset_obj = PasswordReset.objects.filter(token=token).first()
+        reset_obj = CustomPasswordReset.objects.filter(token=token).first()
         
         if not reset_obj:
             return HttpResponse(t.render({'message':'Token Inválido', 'TEMPLATE_ASSETS_URL':TEMPLATE_ASSETS_URL}))

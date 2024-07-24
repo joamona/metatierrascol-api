@@ -14,8 +14,8 @@ from django.db import connection
 from pgOperations.pgOperations import PgConnection
 oc=PgConnection(connection)
 
-print('create table core.passwordreset')
-oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.passwordreset (id serial primary key, email varchar unique not null, token varchar, created_at timestamp default now())')
+print('create table core.custompasswordreset')
+oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.custompasswordreset (id serial primary key, email varchar unique not null, token varchar, created_at timestamp default now())')
 
 oc.commit()
 print('created')

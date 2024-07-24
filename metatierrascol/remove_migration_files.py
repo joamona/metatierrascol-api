@@ -44,7 +44,7 @@ migration_folders=[
     'rrr/migrations',
     'source/migrations',
     'spatialunit/migrations',
-    'mobileappversion'
+    'mobileappversion/migrations'
 ]
 
 borrar_ficheros_excepto_init(migration_folders)
