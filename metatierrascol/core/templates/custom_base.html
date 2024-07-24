@@ -1,0 +1,132 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>MetaTierras Colombia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="icon" type="image/x-icon" href="{{TEMPLATE_ASSETS_URL}}images/logo.png">
+  <style>
+      .flexbox-exterior-container {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+      }
+
+      .flexbox-responsive-interior-container{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;  
+      }
+      .flexbox-responsive-interior-container-with100{
+          display: flex;
+          flex-direction: column;  
+      }
+
+      .flexbox-aling-left{
+          display: flex;
+          justify-content: left;
+          align-items:flex-start;
+          margin-left: 30px;    
+      }
+
+      .text-align-center{
+          margin-top: 10px;
+          text-align: center;
+      }
+
+      .text-align-left{
+          text-align: left;
+      }
+
+      .bold{
+          font-weight: bold;
+      }
+      .red{
+          color: red;
+      }
+      .blue{
+          color: blue;
+      }
+
+      /*It's applied on screens more than 700px */
+      @media only screen and (min-width:700px) {
+          .flexbox-responsive-interior-container {width:700px;}
+          .flexbox-responsive-interior-container-with100 {width:700px;}
+        }
+
+      /*It's applied on screens less than 700px */
+      @media only screen and (max-width:700px) {
+          .flexbox-responsive-interior-container {width:100%;}
+          .flexbox-responsive-interior-container-with100 {width:100%;}
+        }
+        
+      form{
+          width:100%;
+      }
+      mat-form-field{
+          width: 100%;
+          color:white;
+      }
+
+      button{margin-bottom:20px;margin-right: 15px;}
+
+      .color_naranja{
+          color: #cf7310;
+      }
+
+      /**
+      FOOTER
+      */
+      footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding-top: 10px;
+        background-color: #cf7310;
+      }
+
+      .cassat{
+      width: 200px;
+      height: auto;
+      }
+
+      .upv{
+      padding-left: 20px;
+      padding-right: 20px;
+      }
+      @media (max-width:600px){footer {flex-wrap: wrap;}}
+   </style>
+</head>
+
+<body>
+  <main>
+    <div class="flexbox-exterior-container">
+      <br>
+      <br>
+      <br>
+      <h2 class="color_naranja">Web del Proyecto MetaTierras</h2>
+      <h2 class="color_naranja">Ayuda a la recolección de datos para la regularización de tierras en Colombia</h2>
+
+      <div class="flexbox-responsive-interior-container">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
+
+    <footer>
+      <a href="http://ccasat.upv.es/" target="_blank"><img class="cassat" src="{{TEMPLATE_ASSETS_URL}}images/logoCCASAT.jpg"  alt="CCASAT"></a>
+      <a href="https://www.upv.es/" target="_blank"><img class="upv" src="{{TEMPLATE_ASSETS_URL}}images/upv.png" alt="Universitat Politècnica de València"></a>
+      <a href="https://www.forjandofuturos.org/" target="_blank"><img class="fff" src="{{TEMPLATE_ASSETS_URL}}images/forjandoFuturos.png" alt="Forjando Futuros"></a>
+    </footer>
+  
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -24,12 +24,12 @@ urlpatterns = [
     path('create_captcha/', views.createCaptcha,name='create_captcha'),
     path('email_confirm_token/', views.emailConfirmToken,name='email_confirm_token'),
 
-    path ('request_password_reset_email/',resetPasswordViews.RequestPasswordReset.as_view(),name='request_password_reset_email'),
+    path ('request_reset_password_email/',resetPasswordViews.RequestResetPasswordEmail.as_view(),name='request_reset_password_email'),
     path('send_reset_password_form/<token>/', resetPasswordViews.sendResetPasswordForm, name='send_reset_password_form'),
     path('perform_reset_password/<token>/', resetPasswordViews.PerformResetPassword.as_view(),name='perform_reset_password')
 ]
 #Explicación proceso reset password
-    #path ('request_password_reset_email',resetPasswordViews.RequestPasswordReset.as_view(),'request_password_reset_email'),
+    #path ('request_reset_password_email',resetPasswordViews.RequestPasswordReset.as_view(),'request_reset_password_email'),
     #genera un token y lo envía por email para que lo pinche el usuario en una url.
     #la url es send_reset_password_form/<token>/, que se describe abajo
 
