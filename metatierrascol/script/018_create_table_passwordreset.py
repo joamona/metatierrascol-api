@@ -16,6 +16,7 @@ oc=PgConnection(connection)
 
 print('create table core.custompasswordreset')
 oc.cursor.execute('CREATE TABLE IF NOT EXISTS core.custompasswordreset (id serial primary key, email varchar unique not null, token varchar, created_at timestamp default now())')
+oc.cursor.execute('ALTER TABLE core.custompasswordreset ADD CONSTRAINT fk_custompasswordreset_user_email FOREIGN KEY (email) REFERENCES auth_user(email) on delete no action on update cascade')
 
 oc.commit()
 print('created')

@@ -37,10 +37,13 @@ from core.commonlibs import managePermissions
 #igac.email=igac.username
 #igac.save()
 
-print('Usuarios de partida creados: admin, propietario, agrimensor, ant, snr, gestor_catastral e igac')
+import os
+DJANGO_SUPERUSER_EMAIL=os.getenv('DJANGO_SUPERUSER_EMAIL')
+
+print('Añadiendo superuser al grupo admin')
 
 #managePermissions.addUserToGroup(username='joamona@cgf.upv.es', groupname='agrimensor')
-managePermissions.addUserToGroup(username='admin', groupname='admin')
+managePermissions.addUserToGroup(username=DJANGO_SUPERUSER_EMAIL, groupname='admin')
 #managePermissions.addUserToGroup(username='propietario@gmail.com', groupname='propietario')
 #managePermissions.addUserToGroup(username='agrimensor@gmail.com', groupname='agrimensor')
 #managePermissions.addUserToGroup(username='ant@gmail.com', groupname='ant')

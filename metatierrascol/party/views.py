@@ -22,6 +22,6 @@ from knox.views import LoginView as KnoxLoginView
 from . import serializers
 
 # ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
+#class UserViewSet(viewsets.ModelViewSet):
+#    queryset = User.objects.all()
+#    serializer_class = serializers.UserSerializer

@@ -14,6 +14,9 @@ from django.db import connection
 from pgOperations.pgOperations import PgConnection
 oc=PgConnection(connection)
 
+print('Making emails unque in table auth_user')
+oc.cursor.execute('ALTER TABLE auth_user ADD UNIQUE (email)')
+
 #creación de esquemas
 print('CREATE SCHEMA IF NOT EXISTS baunit')
 oc.cursor.execute('create schema baunit')

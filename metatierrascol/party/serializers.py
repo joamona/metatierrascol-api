@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from . import models
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+"""
 
 # Serializers define the API representation.
 class UserSerializer(serializers.ModelSerializer):
@@ -17,9 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
         ref_name = 'UserSerializer'
 
     def create(self, validated_data):
-        """
-        El campo username se rellena con el email
-        """
         print("Creando")
         validated_data['username']=validated_data.get('email')
         validated_data['is_active']=False
@@ -34,3 +32,4 @@ class UserSerializer(serializers.ModelSerializer):
         instance.created = validated_data.get('is_active', instance.is_active)
         instance.save()
         return instance 
+"""

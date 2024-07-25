@@ -129,9 +129,11 @@ class AppSettingsListQuery(generics.ListAPIView):
 #    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethodsAdminPostMethods,)
 #    serializer_class = serializers.UsuariosAvisadosDescargaZipSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
+
+#Añade usuarios a auth_user, y a core.app_user
+class DjangoAndAppUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.DjangoUserSerializer
     permission_classes = (generalAccessPolicy.AllowAnyCreate_AdminRestOfOperations,)
 
     def create(self, request, *args, **kwargs):
@@ -152,7 +154,7 @@ class UserViewSet(viewsets.ModelViewSet):
         data['email']=data['username']
         serializer=self.serializer_class(data=data)
         if serializer.is_valid():
-            user=serializer.save()
+            user=serializer.save()#guarda el usuario en la tabla auth_user
             managePermissions.addUserToGroup(username=data['username'], groupname='propietario')
             email_confirm_token = tokens.AccountActivationTokenGenerator().make_token(user)
 
@@ -167,7 +169,7 @@ class UserViewSet(viewsets.ModelViewSet):
             
             appUserSerializer=serializers.AppUserSerializer(data=d)
             if appUserSerializer.is_valid():
-                appUser=appUserSerializer.save()
+                appUser=appUserSerializer.save() #guarda el usuario en core.app_user
             else:
                 return Response(appUserSerializer.errors, status=400)
             
@@ -184,6 +186,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
+#Para manejar solo la tabla core.app_user
 class AppUserViewSet(viewsets.ModelViewSet):
     queryset = models.AppUser.objects.all()
     serializer_class = serializers.AppUserSerializer

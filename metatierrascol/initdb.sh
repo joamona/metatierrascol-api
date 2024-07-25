@@ -1,8 +1,9 @@
 #/bin/sh
 #python remove_migration_files.py  -->No necesario git ya no sigue los ficheros de las migraciones
+python remove_migration_files.py
 python manage.py makemigrations
 python manage.py migrate
-DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD} python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_USERNAME} --email ${DJANGO_SUPERUSER_EMAIL}
+DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD} python manage.py createsuperuser --noinput --username ${DJANGO_SUPERUSER_EMAIL} --email ${DJANGO_SUPERUSER_EMAIL}
 
 python manage.py shell < script/001_create_schemas_and_tables.py
 python manage.py shell < script/003_create_groups.py

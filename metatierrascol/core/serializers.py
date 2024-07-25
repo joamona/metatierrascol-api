@@ -54,7 +54,7 @@ class LoginViewWithKnoxSerializer(serializers.Serializer):
 #        fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
+class DjangoUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id','username','email','is_superuser','is_active', 'password']

@@ -4,11 +4,14 @@ from rest_framework import routers
 from knox import views as knox_views
 
 from . import views, resetPasswordViews
-# Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'appsettings',views.AppSettingsViewSet, 'appsettings')
+
+#obsolete. Now groups are used
 #router.register(r'usuarios_avisados_descarga_zip',views.UsuariosAvisadosDescargaZipViewSet, 'usuarios_avisados_descarga_zip')
-router.register(r'user',views.UserViewSet,'user')
+
+router.register(r'appsettings',views.AppSettingsViewSet, 'appsettings')
+#adds a django user and core.app_user 
+router.register(r'django_and_app_user',views.DjangoAndAppUserViewSet,'user')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
