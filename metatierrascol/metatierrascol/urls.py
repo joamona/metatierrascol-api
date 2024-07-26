@@ -25,19 +25,19 @@ from django.contrib.auth.decorators import login_required
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="MetaTierras Colombia API",
       default_version='v1',
-      description="Test description",
+      description="MetaTierras Colombia API",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
+      contact=openapi.Contact(email="joamona@cgf.upv.es"),
+      license=openapi.License(name="GPL License"),
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
 )
 
 urlpatterns = [
-#    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 #    path("accounts/", include("django.contrib.auth.urls")),
     path('admin/', admin.site.urls),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'), 

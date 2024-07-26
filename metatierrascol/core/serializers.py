@@ -3,10 +3,11 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from . import models
 
+"""
 class AppSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AppSettings
@@ -22,7 +23,7 @@ class AppSettingsSerializer(serializers.ModelSerializer):
         #si los valores son correctos, devuelve return attrs
         #si hay error return serializers.ValidationError('El mensaje')
         return validated
-
+"""
 
 class LoginViewWithKnoxSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -47,13 +48,6 @@ class LoginViewWithKnoxSerializer(serializers.Serializer):
         attrs['user'] = user
         return attrs
     
-
-#class UsuariosAvisadosDescargaZipSerializer(serializers.ModelSerializer):
-#    class Meta:
-#        model = models.UsuariosAvisadosDescargaZip
-#        fields = '__all__'
-
-
 class DjangoUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -96,3 +90,25 @@ class AppUserSerializer(serializers.ModelSerializer):
         fields = ['id','user', 'data_acceptation', 'notification_acceptation', 'interest',
                     'email_confirm_token', 'email_confirmed']   
 
+class DjangoGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+class AppSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AppSettings
+        fields = '__all__'
+
+class DjangoUserStatusUpdateSerializer(serializers.ModelSerializer):
+    is_active = serializers.BooleanField(required=False)
+    is_superuser=serializers.BooleanField(required=False)
+    class Meta:
+        model = User
+        fields = ['is_active', 'is_superuser']
+
+class DjangoUserGroupsUpdateSerializer(serializers.ModelSerializer):
+    groupId=serializers.IntegerField()
+    class Meta:
+        model = User
+        fields = ['groupId']

@@ -9,9 +9,12 @@ router = routers.DefaultRouter()
 #obsolete. Now groups are used
 #router.register(r'usuarios_avisados_descarga_zip',views.UsuariosAvisadosDescargaZipViewSet, 'usuarios_avisados_descarga_zip')
 
-router.register(r'appsettings',views.AppSettingsViewSet, 'appsettings')
+router.register(r'app_settings',views.AppSettingsViewSet, 'appsettings')
 #adds a django user and core.app_user 
-router.register(r'django_and_app_user',views.DjangoAndAppUserViewSet,'user')
+router.register(r'django_and_app_user',views.DjangoAndAppUserViewSet,'django_and_app_user')
+router.register(r'django_groups',views.DjangoGroupsViewSet,'django_groups')
+router.register(r'django_user_status_update',views.DjangoUserStatusUpdate,'django_user_status_update')
+router.register(r'django_user_groups_update',views.DjangoUserGroupsUpdate,'django_user_groups_update')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

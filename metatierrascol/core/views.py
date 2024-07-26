@@ -2,12 +2,12 @@
 #Django imports
 from django.http import JsonResponse, HttpRequest, HttpResponse
 from django.contrib.auth import login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.template.loader import get_template
 
 
 #rest framework imports
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, generics, mixins
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
@@ -21,7 +21,7 @@ from pgOperations.pgOperations import FieldsAndValues, WhereClause
 #mis módulos
 from . import serializers, models
 from .commonlibs import managePermissions
-from .accesspolicy import generalAccessPolicy
+from .accesspolicy import generalAccessPolicy, coreViewsAcessPolicy
 from core.commonlibs import generalModule
 from core.commonlibs import captchaModule
 from core.commonlibs import emails, tokens
@@ -90,29 +90,7 @@ class LoginViewWithKnox(KnoxLoginView):
         v['opened_sessions']= os
         return Response(v, status=status.HTTP_200_OK)
 
-class AppSettingsViewSet(viewsets.ModelViewSet):
-    queryset = models.AppSettings.objects.all()
-    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethodsAdminPostMethods,)
-    serializer_class = serializers.AppSettingsSerializer
 
-class AppSettingsList(viewsets.ModelViewSet):
-    queryset = models.AppSettings.objects.all()#el queriset trabaja con todos los obj
-						#es una variable de clase
-    serializer_class = serializers.AppSettingsSerializer #es una variable de clase
-    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethods,)#esto permite 
-        #a todos los métodos ser usados, 
-        #pero cada método puede tener unos permisos diferentes con el siguiente decorador:
-        # @action(detail=True, methods=['post'], permission_classes=[IsAdminOrIsSelf])
-        #       detail=True significa que trabaje con varios registros
-    def retrieve(self, request, id=None):#fíjate que recibe request y un paraámertro de la url
-        #print(self.basename, self.action, self.detail, self.suffix, self.name, self.description)
-        qs2=self.queryset.filter(id__lt=id)#cojo el queryset de la variable de clase y le aplico
-			#el filtro gid < the_gid. → lt significa less than
-        s = self.get_serializer(qs2, many=True)#obtiene el serializer de la clase
-			#many significa que puede trabajar
-			#con varios registros, no solo uno
-        return Response(s.data)
-    
 
 class AppSettingsListQuery(generics.ListAPIView):
     """
@@ -131,10 +109,10 @@ class AppSettingsListQuery(generics.ListAPIView):
 
 
 #Añade usuarios a auth_user, y a core.app_user
-class DjangoAndAppUserViewSet(viewsets.ModelViewSet):
+class DjangoAndAppUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.DjangoUserSerializer
-    permission_classes = (generalAccessPolicy.AllowAnyCreate_AdminRestOfOperations,)
+    permission_classes = (coreViewsAcessPolicy.DjangoAndAppUserViewsAccessPolicy,)
 
     def create(self, request, *args, **kwargs):
         """
@@ -185,16 +163,157 @@ class DjangoAndAppUserViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['post'])
+    def get_users(self, request, *args, **kwargs):
+
+        username=request.data.get('username','')
+        is_active=request.data.get('active','')
+        is_superuser=request.data.get('is_superuser','')
+        after_date_joined=request.data.get('after_date_joined','')
+        before_date_joined=request.data.get('before_date_joined','')
+
+        #print('username',username)
+        #print('is_active',is_active)
+        #print('is_superuser',is_superuser)
+        #print('after_date_joined',after_date_joined)
+        #print('before_date_joined',before_date_joined)
+
+        where='auth_user.id=app_user.user_id'
+        valuesCondWhere=[]
+        if username != '':
+            where = where + ' and auth_user.username like %s'
+            username2 = f'%{username}%'
+            valuesCondWhere=[username2]
+
+        if is_active != '':
+            where = where + ' and auth_user.is_active = %s'
+            if is_active == 'true' or is_active == 'True' or is_active == True:
+                valuesCondWhere.append(True)
+            elif is_active == 'false' or is_active == 'False' or is_active == False:
+                valuesCondWhere.append(False)
+
+        if is_superuser != '':
+            where = where + ' and auth_user.is_superuser = %s'
+            if is_superuser == 'true' or is_superuser == 'True' or is_superuser == True:
+                valuesCondWhere.append(True)
+            elif is_superuser == 'false' or is_superuser == 'False' or is_superuser == False:
+                valuesCondWhere.append(False)
+
+        #print(where)
+        #print(valuesCondWhere) 
+        pgo=generalModule.getDjangoPg()
+        whereClause=WhereClause(where,valuesCondWhere)
+        user_fields=pgo.pgGetTableFieldNames(table_name='public.auth_user',
+            list_fields_to_remove=['id','password','first_name', 'last_name'],
+            returnAsString=True)
+        app_user_fields = pgo.pgGetTableFieldNames(table_name='core.app_user',
+            list_fields_to_remove=['id','email_confirm_token'],
+            returnAsString=True)
+        app_user_fields = app_user_fields + ',app_user.id as app_user_id' 
+        select_fieldnames = user_fields + ',' + app_user_fields
+        limit = int(generalModule.getSetting('numero_maximo_de_filas_recuperadas'))
+        r=pgo.pgSelect(table_name='public.auth_user as auth_user ,core.app_user as app_user',
+                       string_fields_to_select=select_fieldnames,
+                       whereClause=whereClause,limit=limit)
+        r2=[]
+        for u in r:
+            user_groups = generalModule.getUserGroups_fromUsername(u['username'])
+            u['user_groups']=user_groups
+            r2.append(u)
+        n=len(r2)
+        return Response({'message':f'Usuarios recuperados: {n}','data':r2})
+
+    @action(detail=False, methods=['post'])
+    def get_users_of_group(self, request, *args, **kwargs):
+        groupId = request.data.get('groupId','')
+        if groupId=='':
+            return Response({'message':'Ningún grupo especificado'})
+        where='auth_user.id=app_user.user_id and auth_user_groups.user_id=auth_user.id and auth_user_groups.group_id = %s'
+
+        whereClause=WhereClause(where,[groupId])
+        pgo=generalModule.getDjangoPg()
+        user_fields=pgo.pgGetTableFieldNames(table_name='public.auth_user',
+            list_fields_to_remove=['id','password','first_name', 'last_name'],
+            returnAsString=True)
+        app_user_fields = pgo.pgGetTableFieldNames(table_name='core.app_user',
+            list_fields_to_remove=['id','user_id','email_confirm_token'],
+            returnAsString=True)
+        app_user_fields = app_user_fields + ', app_user.user_id as user_id'
+        app_user_fields = app_user_fields + ',app_user.id as app_user_id' 
+        select_fieldnames = user_fields + ',' + app_user_fields
+        print(select_fieldnames)
+        limit = int(generalModule.getSetting('numero_maximo_de_filas_recuperadas'))
+
+        r=pgo.pgSelect(table_name='public.auth_user as auth_user ,core.app_user as app_user, public.auth_user_groups as auth_user_groups',
+                       string_fields_to_select=select_fieldnames,
+                       whereClause=whereClause,limit=limit)
+
+        r2=[]
+        for u in r:
+            user_groups = generalModule.getUserGroups_fromUsername(u['username'])
+            u['user_groups']=user_groups
+            r2.append(u)
+        n=len(r2)
+        return Response({'message':f'Usuarios recuperados: {n}','data':r2})
+
+
+class DjangoUserStatusUpdate(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    Updates the is_active and is_superuser status in the table public.auth_user.
+    Receives by PATCH the fields:
+    - is_active 
+    - is_superuser.
+    It can receive only one of the parameters.
+    - url: core/django_user_status_update/{id}/
+    """
+    queryset = User.objects.all()
+    permission_classes = (generalAccessPolicy.AllowAdminOnly,)
+    serializer_class = serializers.DjangoUserStatusUpdateSerializer
+
+class DjangoUserGroupsUpdate(viewsets.GenericViewSet):
+    """
+    Both methods recieive a user id, in the url, and the group id by POST:
+    - core/django_user_groups_update/{id}/add_user_to_group/
+    - core/django_user_groups_update/{id}/remove_user_from_group/
+    """
+    queryset = User.objects.all()
+    permission_classes = (generalAccessPolicy.AllowAdminOnly,)
+    serializer_class = serializers.DjangoUserGroupsUpdateSerializer
+
+    @action(detail=True, methods=['post'])
+    def add_user_to_group(self, request, *args, **kwargs):
+        ser=serializers.DjangoUserGroupsUpdateSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        groupId=ser.validated_data['groupId']
+        u:User = self.get_object()
+        group = Group.objects.filter(id=groupId).first()#None si no existe
+        if not group:
+            return Response({'error':['El id del grupo no existe']})
+        u.groups.add(Group.objects.get(id=groupId))
+        return Response({'message':['Usuario añadido al grupo']})
+
+    @action(detail=True, methods=['post'])
+    def remove_user_from_group(self, request, *args, **kwargs):
+        ser=serializers.DjangoUserGroupsUpdateSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        groupId=ser.validated_data['groupId']
+        u:User = self.get_object()
+        group = Group.objects.filter(id=groupId).first()#None si no existe
+        if not group:
+            return Response({'error':['El id del grupo no existe']})
+        u.groups.remove(Group.objects.get(id=groupId))
+        return Response({'message':['Usuario eliminado del grupo']})
 
 #Para manejar solo la tabla core.app_user
 class AppUserViewSet(viewsets.ModelViewSet):
+    """
+    Manages the table core.app_user
+    """
     queryset = models.AppUser.objects.all()
     serializer_class = serializers.AppUserSerializer
     permission_classes = (generalAccessPolicy.AllowOnlyModifyAndListToAdmin,)
 
 
-
-#@method_decorator(csrf_exempt, name='dispatch')
 @api_view(http_method_names=['GET'])
 @permission_classes((permissions.AllowAny,))
 def createCaptcha(request):
@@ -205,7 +324,11 @@ def createCaptcha(request):
 @permission_classes((permissions.AllowAny,))
 def emailConfirmToken(request):
     """
-    Sets the email as confirmed in the core.app_user table
+    Sets the email as confirmed in the core.app_user table.
+    Responds with a template:
+    - Wrong token
+    - Email already confirmed
+    - Email confirmed
     """
     
     pg=generalModule.getDjangoPg()
@@ -244,6 +367,37 @@ def emailConfirmToken(request):
 
         return HttpResponse(t.render({'TEMPLATE_ASSETS_URL': settings.TEMPLATE_ASSETS_URL, 'MENSAJE':mensaje}))
 
+#gestión de grupos
+class DjangoGroupsViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all().order_by('id')
+    serializer_class = serializers.DjangoGroupSerializer
+    permission_classes = (coreViewsAcessPolicy.DjangoGroupsViewsAccessPolicy,)
 
 
+class AppSettingsViewSet(viewsets.ModelViewSet):
+    queryset = models.AppSettings.objects.all().order_by('id')
+    serializer_class = serializers.AppSettingsSerializer
+    permission_classes = (coreViewsAcessPolicy.AppSettingsViewsAccessPolicy,)
 
+
+class AppSettingsList(viewsets.ModelViewSet):
+    """
+    Not usefull. Created for testing
+    """
+    queryset = models.AppSettings.objects.all()#el queriset trabaja con todos los obj
+						#es una variable de clase
+    serializer_class = serializers.AppSettingsSerializer #es una variable de clase
+    permission_classes = (generalAccessPolicy.AllowAuthenticatedSafeMethods,)#esto permite 
+        #a todos los métodos ser usados, 
+        #pero cada método puede tener unos permisos diferentes con el siguiente decorador:
+        # @action(detail=True, methods=['post'], permission_classes=[IsAdminOrIsSelf])
+        #       detail=True significa que trabaje con varios registros
+    def retrieve(self, request, id=None):#fíjate que recibe request y un parámetro de la url
+        #print(self.basename, self.action, self.detail, self.suffix, self.name, self.description)
+        qs2=self.queryset.filter(id__lt=id)#cojo el queryset de la variable de clase y le aplico
+			#el filtro gid < the_gid. → lt significa less than
+        s = self.get_serializer(qs2, many=True)#obtiene el serializer de la clase
+			#many significa que puede trabajar
+			#con varios registros, no solo uno
+        return Response(s.data)
+    

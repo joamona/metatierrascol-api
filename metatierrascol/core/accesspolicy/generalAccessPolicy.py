@@ -88,7 +88,7 @@ class AllowAnyCreate_AdminRestOfOperations(AccessPolicy):
             "effect": "allow",
         },
         {
-            "action": ["list", "retrieve", "update","partial_update", "destroy", "list"],
+            "action": ["list", "retrieve", "update","partial_update", "destroy", "list", "get_all"],
             "principal": ["group:admin"],
             "effect": "allow",
         },
