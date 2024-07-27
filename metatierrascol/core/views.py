@@ -167,10 +167,12 @@ class DjangoAndAppUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def get_users(self, request, *args, **kwargs):
 
         username=request.data.get('username','')
-        is_active=request.data.get('active','')
+        is_active=request.data.get('is_active','')
         is_superuser=request.data.get('is_superuser','')
-        after_date_joined=request.data.get('after_date_joined','')
-        before_date_joined=request.data.get('before_date_joined','')
+        email_confirmed=request.data.get('email_confirmed','')
+        #after_date_joined=request.data.get('after_date_joined','')
+        #before_date_joined=request.data.get('before_date_joined','')
+        print (request.data)
 
         #print('username',username)
         #print('is_active',is_active)
@@ -190,6 +192,13 @@ class DjangoAndAppUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             if is_active == 'true' or is_active == 'True' or is_active == True:
                 valuesCondWhere.append(True)
             elif is_active == 'false' or is_active == 'False' or is_active == False:
+                valuesCondWhere.append(False)
+
+        if email_confirmed != '':
+            where = where + ' and app_user.email_confirmed = %s'
+            if email_confirmed == 'true' or is_active == 'True' or is_active == True:
+                valuesCondWhere.append(True)
+            elif email_confirmed == 'false' or is_active == 'False' or is_active == False:
                 valuesCondWhere.append(False)
 
         if is_superuser != '':
@@ -214,7 +223,7 @@ class DjangoAndAppUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         limit = int(generalModule.getSetting('numero_maximo_de_filas_recuperadas'))
         r=pgo.pgSelect(table_name='public.auth_user as auth_user ,core.app_user as app_user',
                        string_fields_to_select=select_fieldnames,
-                       whereClause=whereClause,limit=limit)
+                       whereClause=whereClause,limit=limit, orderBy='user_id desc')
         r2=[]
         for u in r:
             user_groups = generalModule.getUserGroups_fromUsername(u['username'])
@@ -246,7 +255,7 @@ class DjangoAndAppUserViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
         r=pgo.pgSelect(table_name='public.auth_user as auth_user ,core.app_user as app_user, public.auth_user_groups as auth_user_groups',
                        string_fields_to_select=select_fieldnames,
-                       whereClause=whereClause,limit=limit)
+                       whereClause=whereClause,limit=limit, orderBy='user_id desc')
 
         r2=[]
         for u in r:
@@ -290,7 +299,8 @@ class DjangoUserGroupsUpdate(viewsets.GenericViewSet):
         if not group:
             return Response({'error':['El id del grupo no existe']})
         u.groups.add(Group.objects.get(id=groupId))
-        return Response({'message':['Usuario añadido al grupo']})
+        groupName = group.name
+        return Response({'message':[f'Usuario añadido al grupo: {groupName}']})
 
     @action(detail=True, methods=['post'])
     def remove_user_from_group(self, request, *args, **kwargs):
@@ -301,18 +311,34 @@ class DjangoUserGroupsUpdate(viewsets.GenericViewSet):
         group = Group.objects.filter(id=groupId).first()#None si no existe
         if not group:
             return Response({'error':['El id del grupo no existe']})
+        groupName = group.name
         u.groups.remove(Group.objects.get(id=groupId))
-        return Response({'message':['Usuario eliminado del grupo']})
+        return Response({'message':[f'Usuario eliminado del grupo: {groupName}']})
 
 #Para manejar solo la tabla core.app_user
-class AppUserViewSet(viewsets.ModelViewSet):
+class AppUserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     Manages the table core.app_user
     """
     queryset = models.AppUser.objects.all()
     serializer_class = serializers.AppUserSerializer
     permission_classes = (generalAccessPolicy.AllowOnlyModifyAndListToAdmin,)
+    
+    
+    def partial_update(self, request, *args, **kwargs):
+                # Llama al método original para realizar la actualización parcial
+        response = super().partial_update(request, *args, **kwargs)
+        
+        # Accede a la instancia actualizada
+        instance = self.get_object()
 
+        # Serializa los campos personalizados que deseas devolver
+        custom_response_data = {
+            'email_confirmed': instance.email_confirmed
+        }
+        
+        # Retorna la respuesta personalizada
+        return Response(custom_response_data, status=status.HTTP_200_OK)
 
 @api_view(http_method_names=['GET'])
 @permission_classes((permissions.AllowAny,))
@@ -378,7 +404,12 @@ class AppSettingsViewSet(viewsets.ModelViewSet):
     queryset = models.AppSettings.objects.all().order_by('id')
     serializer_class = serializers.AppSettingsSerializer
     permission_classes = (coreViewsAcessPolicy.AppSettingsViewsAccessPolicy,)
-
+    
+    @action(detail=False, methods=['post'])
+    def get_parameter_value_by_name(self, request, *args, **kwargs):
+        parameter_name = request.data.get('parameter_name')
+        parameter_value = generalModule.getSetting(parameter_name)
+        return Response({'message':'Parámetro recuperado con éxito', 'parameter_name':parameter_name, 'parameter_value': parameter_value})
 
 class AppSettingsList(viewsets.ModelViewSet):
     """

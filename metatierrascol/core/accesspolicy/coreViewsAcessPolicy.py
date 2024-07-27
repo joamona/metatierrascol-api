@@ -43,13 +43,7 @@ class AppSettingsViewsAccessPolicy(AccessPolicy):
             "action": ["*"],
             "principal": ["group:admin"],
             "effect": "allow",
-        },
-        {
-            "action": ["list"],
-            "principal": "authenticated",
-            "effect": "allow",
-        },
-
+        }
     ]
 
 

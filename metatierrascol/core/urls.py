@@ -12,6 +12,8 @@ router = routers.DefaultRouter()
 router.register(r'app_settings',views.AppSettingsViewSet, 'appsettings')
 #adds a django user and core.app_user 
 router.register(r'django_and_app_user',views.DjangoAndAppUserViewSet,'django_and_app_user')
+router.register(r'app_user',views.AppUserViewSet,'app_user')
+
 router.register(r'django_groups',views.DjangoGroupsViewSet,'django_groups')
 router.register(r'django_user_status_update',views.DjangoUserStatusUpdate,'django_user_status_update')
 router.register(r'django_user_groups_update',views.DjangoUserGroupsUpdate,'django_user_groups_update')
