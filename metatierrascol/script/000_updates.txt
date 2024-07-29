@@ -66,11 +66,25 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
 #Creación más settings para la gestión de nuevos usuarios
 #016_create_email_settings_otros.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/016_create_email_settings_otros.py"
+    * Desarrollo casa: X
+    * Desarrollo portatil: 
+    * Desarrollo poli: 
+    * Producción upvusig: X
+    * Producción fff: 
 
-#Django sites for password reset  <---ANULADO
-#017_update_django_sites.py
-docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py migrate"
-docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/017_update_django_sites.py"
+
+#Tabla para el reestablecimiento de contraseñas
+#018_create_table_passwordreset.py
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/018_create_table_passwordreset.py"
+    * Desarrollo casa: X
+    * Desarrollo portatil: 
+    * Desarrollo poli: 
+    * Producción upvusig: X
+    * Producción fff: 
+
+#Configuración para establecer el máximo de filas devueltas
+#019_maximum_rows_retrieved_setting.py
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/019_maximum_rows_retrieved_setting.py"
     * Desarrollo casa: X
     * Desarrollo portatil: 
     * Desarrollo poli: 
