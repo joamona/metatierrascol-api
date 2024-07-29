@@ -22,7 +22,7 @@ python manage.py shell < script/015_create_email_settings.py
 python manage.py shell < script/016_create_email_settings_otros.py
 #python manage.py shell < script/017_update_django_sites.py
 python manage.py shell < script/018_create_table_passwordreset.py
-python manage.py shell < script/019_maximum_rows_retrieved_setting
+python manage.py shell < script/019_maximum_rows_retrieved_setting.py
 
 
 
