@@ -73,21 +73,26 @@ class LoginViewWithKnox(KnoxLoginView):
         required: true
         type: string
         """
+        print(request.data.items)
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            print("El serializador es válido")
             user = serializer.validated_data['user']
             login(request, user)
             response = super().post(request, format=None)
         else:
+            print("El serializador no es valido")
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         #print('Validated data')
         #print(serializer.validated_data)
         v=response.data #the response with the authentication token
+        print('Response.data', v)
         groups = managePermissions.getUserGroups_fromUsername(request.data['username'])
         v['groups'] = groups #la lista de grupos a los que pertenece el usuario
         v['username'] = request.data['username']
         os=generalModule.getOpenedKnoxSessions(request.data['username'])
         v['opened_sessions']= os
+        print('Response.data2', v)
         return Response(v, status=status.HTTP_200_OK)
 
 
