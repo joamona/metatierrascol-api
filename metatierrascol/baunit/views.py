@@ -6,18 +6,18 @@ from django.http import JsonResponse, HttpRequest
 from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-
+from rest_framework.decorators import action
 #mis módulos
 from . import serializers, models
 from core.commonlibs import managePermissions
 
 from django.db.models.query import prefetch_related_objects
 from codelist.models import EstadoExpediente
+from . import accessPolicy
 
 class BaunitViewSet(viewsets.ModelViewSet):
     queryset = models.Baunit.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (accessPolicy.BaunitViewSetAccessPolicy,)
     serializer_class = serializers.BaunitSerializer
 
     def create(self, request, *args, **kwargs):
@@ -51,3 +51,18 @@ class BaunitViewSet(viewsets.ModelViewSet):
                 return Response({'error': f'Error al actualizar los datos: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
+    @action(detail=False, methods=['post'])
+    def get_created_by_user_baunits(self, request, *args, **kwargs):
+        """
+        Gets the baunits created by a user
+        Needs the creado_por by post
+        """
+        creado_por = request.data.get('creado_por','')
+        if creado_por == '':
+            return Response({'error': ['El campo creado_por no ha sido enviado']})
+
+        self.queryset=models.Baunit.objects.filter(creado_por=creado_por).order_by('fecha_creacion')
+        s = self.get_serializer(self.queryset, many=True)
+        return Response(s.data)
+
