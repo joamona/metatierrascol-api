@@ -207,3 +207,9 @@ def remove_id_fromDictKeys(d:dict)->dict:
 
         
 
+def getUserModelFromUsername(username):
+    """
+    Returns a list with the user.
+    An empty list if the user does not exist
+    """
+    return list(User.objects.filter(username=username))

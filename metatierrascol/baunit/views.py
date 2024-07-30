@@ -15,6 +15,8 @@ from django.db.models.query import prefetch_related_objects
 from codelist.models import EstadoExpediente
 from . import accessPolicy
 
+from core.commonlibs import generalModule
+
 class BaunitViewSet(viewsets.ModelViewSet):
     queryset = models.Baunit.objects.all()
     permission_classes = (accessPolicy.BaunitViewSetAccessPolicy,)
@@ -59,10 +61,15 @@ class BaunitViewSet(viewsets.ModelViewSet):
         Needs the creado_por by post
         """
         creado_por = request.data.get('creado_por','')
+
         if creado_por == '':
             return Response({'error': ['El campo creado_por no ha sido enviado']})
-
-        self.queryset=models.Baunit.objects.filter(creado_por=creado_por).order_by('fecha_creacion')
+        
+        l=generalModule.getUserModelFromUsername(creado_por)
+        if len(l) == 0:
+            return Response({'error': [f'El usuario {creado_por} no existe' ]})
+        
+        self.queryset=models.Baunit.objects.filter(creado_por=l[0].id).order_by('fecha_creacion')
         s = self.get_serializer(self.queryset, many=True)
         return Response(s.data)
 
