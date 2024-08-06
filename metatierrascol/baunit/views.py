@@ -17,8 +17,10 @@ from . import accessPolicy
 
 from core.commonlibs import generalModule
 
+numero_maximo_de_filas_recuperadas = int(generalModule.getSetting('numero_maximo_de_filas_recuperadas'))
+
 class BaunitViewSet(viewsets.ModelViewSet):
-    queryset = models.Baunit.objects.all()
+    queryset = models.Baunit.objects.all().order_by('fecha_creacion')[:numero_maximo_de_filas_recuperadas]
     permission_classes = (accessPolicy.BaunitViewSetAccessPolicy,)
     serializer_class = serializers.BaunitSerializer
 
@@ -69,7 +71,7 @@ class BaunitViewSet(viewsets.ModelViewSet):
         if len(l) == 0:
             return Response({'error': [f'El usuario {creado_por} no existe' ]})
         
-        self.queryset=models.Baunit.objects.filter(creado_por=l[0].id).order_by('fecha_creacion')
+        self.queryset=models.Baunit.objects.filter(creado_por=l[0].id).order_by('fecha_creacion')[:numero_maximo_de_filas_recuperadas]
         s = self.get_serializer(self.queryset, many=True)
         return Response(s.data)
 

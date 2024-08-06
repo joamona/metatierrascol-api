@@ -58,7 +58,7 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
 #015_create_email_settings.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/015_create_email_settings.py"
     * Desarrollo casa: X
-    * Desarrollo portatil: 
+    * Desarrollo portatil: X
     * Desarrollo poli: 
     * Producción upvusig: X
     * Producción fff: 
@@ -67,7 +67,7 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
 #016_create_email_settings_otros.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/016_create_email_settings_otros.py"
     * Desarrollo casa: X
-    * Desarrollo portatil: 
+    * Desarrollo portatil: X
     * Desarrollo poli: 
     * Producción upvusig: X
     * Producción fff: 
@@ -77,7 +77,7 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
 #018_create_table_passwordreset.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/018_create_table_passwordreset.py"
     * Desarrollo casa: X
-    * Desarrollo portatil: 
+    * Desarrollo portatil: X
     * Desarrollo poli: 
     * Producción upvusig: X
     * Producción fff: 
@@ -86,10 +86,16 @@ docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shel
 #019_maximum_rows_retrieved_setting.py
 docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/019_maximum_rows_retrieved_setting.py"
     * Desarrollo casa: X
-    * Desarrollo portatil: 
+    * Desarrollo portatil: X
     * Desarrollo poli: 
     * Producción upvusig: X
     * Producción fff: 
 
-docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/018_create_table_passwordreset.py"
-docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py migrate"
+#Configuración para enviar o no email de aviso al activar-desactivar usuarios
+#020_send_email_on_activate_user.py
+docker exec -it metatierrascol-api-metatierrascol-1 sh -c "python manage.py shell < script/020_send_email_on_activate_user.py"
+    * Desarrollo casa: X
+    * Desarrollo portatil: X
+    * Desarrollo poli: 
+    * Producción upvusig: X
+    * Producción fff: 

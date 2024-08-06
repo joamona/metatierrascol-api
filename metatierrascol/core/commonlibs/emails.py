@@ -29,7 +29,8 @@ def emailUserDeactivationAccount(username):
     subject = 'Su cuenta en MetaTierras Colombia ha sido desactivada'
     message = f"""Querido usuario,
     
-Sentimos informale de que su cuenta ha sido desactivada, y ya no podrá entrar en el sistema hasta que sea reactivada. Por favor contacte con nosotros en  {settings.EMAIL_UPV} para más información.
+Sentimos informale de que su cuenta ha sido desactivada, y ya no podrá entrar en el sistema hasta que sea reactivada. 
+Por favor contacte con nosotros en  {settings.EMAIL_UPV} para más información.
 
 --
 Saludos,
@@ -43,7 +44,8 @@ def emailUserActivationAccount(username):
     subject = 'Activación de su cuenta en MetaTierras Colombia'
     message = f"""Querido usuario,
     
-Nos complace informarle de que su cuenta en MetaTierras, {settings.WEB_URL}, ha sido activada. Ya puede entrar en el sistema y subir datos.
+Nos complace informarle de que su cuenta en MetaTierras Colombia, {settings.WEB_URL}, ha sido activada. 
+Ya puede entrar en el sistema y subir datos.
 
 --
 Saludos,
@@ -66,7 +68,8 @@ def alertUserConfirmedEmail(user_id, username, recipient_list):
     
 Le avisamos de que el usuario {username} acaba de confirmar su email.
 Su cuenta ha sido automáticamente activada.
-Puede revisar su estatus en {url_estatus}.
+Ahora debe revisar por qué solicita el alta en el sistema y, en su caso, 
+activarlo para que pueda entrar en el sistema.
 
 --
 Saludos,

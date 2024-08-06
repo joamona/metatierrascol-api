@@ -277,6 +277,26 @@ class DjangoUserStatusUpdate(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     permission_classes = (generalAccessPolicy.AllowAdminOnly,)
     serializer_class = serializers.DjangoUserStatusUpdateSerializer
 
+    def partial_update(self, request, *args, **kwargs):
+        # Lógica de actualización parcial predeterminada
+        partial = kwargs.pop('partial', True)
+        instance = self.get_object()
+        old_active_status = instance.is_active
+        new_active_status = request.data.get('is_active','')
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # Llama a tu función personalizada
+        if generalModule.getSetting('enviar_email_al_activar_desactivar_usuarios')=='True':
+            if (new_active_status != ''):
+                if new_active_status == True:
+                    emails.emailUserActivationAccount(instance.username)
+                else:
+                    emails.emailUserDeactivationAccount(instance.username)
+
+        return Response(serializer.data)
+
 class DjangoUserGroupsUpdate(viewsets.GenericViewSet):
     """
     Both methods recieive a user id, in the url, and the group id by POST:

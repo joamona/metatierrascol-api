@@ -34,7 +34,7 @@ def getSetting(parameterName):
 
 def isAdministrator(request):
     user=request.user
-    return user.groups.filter(name='admins').exists()
+    return user.groups.filter(name='admin').exists()
 
 def isNeighbor(user: User):
     return user.groups.filter(name='neighbors').exists()
